@@ -10,3 +10,7 @@ A small collection of Codex skills by Thoriq.
 | [`coding-standards`](./coding-standards/) | Apply correct-by-construction TypeScript engineering standards. |
 
 Each skill is self-contained in its own directory and defined by a `SKILL.md` file.
+
+## Prompts
+
+The [`prompts`](./prompts/) directory contains reusable Codex prompt commands.
