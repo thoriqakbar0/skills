@@ -1,0 +1,4 @@
+interface:
+  display_name: "Coding Standards"
+  short_description: "Apply correct-by-construction TypeScript standards"
+  default_prompt: "Use $coding-standards to review this TypeScript change for correctness, boundaries, and verification."
