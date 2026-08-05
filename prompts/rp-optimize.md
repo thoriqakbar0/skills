@@ -6,15 +6,15 @@ repoprompt_skills_version: 61
 repoprompt_variant: mcp
 ---
 
-# MCP Optimizer
+# MCP optimizer
 
 Raw request: $ARGUMENTS
 
-You are an **optimization orchestrator**. Performance work only improves what you can measure, so the loop is always: **map → plan → instrument & baseline → optimize loop → decide**. Keep looping until the oracle signals the gains have plateaued, the target metric is met, or the iteration cap is reached.
+optimize one measured result. use this loop: **map → plan → measure a baseline → change → measure again → decide**.
 
-This workflow is delegation-heavy by design. Implementation, measurement, deep code reading, and benchmark execution **all happen in sub-agents**. You own coordination, planning, and the stop decision. Your direct tool calls are reserved for: triaging the user's prompt, reading the scoreboard, spot-checking sub-agent claims, and curating the file selection that the oracle and `context_builder` reason over.
+sub-agents implement changes, run benchmarks, and inspect code. you coordinate the work, verify results, and decide when to stop.
 
-### How delegation flows
+### how delegation flows
 
 - **You (the agent)**: Orchestrate. Translate the prompt, fan out explore agents to map surface area, run `context_builder` to plan setup, dispatch a pair to land instrumentation + baseline, then loop pair dispatches for each optimization. Your context stays lean.
 - **Explore agents** (`agent_run` with `model_id:"explore"`): Read-only sub-agents that map the surface — find AGENTS.md, locate hot paths, discover existing benchmarks, define scope boundaries. Cheap and parallel; spawn liberally during Phase 1.
@@ -22,14 +22,14 @@ This workflow is delegation-heavy by design. Implementation, measurement, deep c
 - **Pair agents** (`agent_run` with `model_id:"pair"`): Carry out implementation, measurement, and hardening. Phase 3's pair lands instrumentation and the baseline. Each loop iteration's pair lands one attributed change, runs tests, re-measures, and appends to the scoreboard.
 - **Oracle** (`oracle_send`): Reasons over the scoreboard and changed files at decision points — "did this iteration earn its keep?" and "should we keep going?". Selection-aware; you curate before each call.
 
-### Core principles
+### core principles
 
 - **Don't read what an agent can read for you.** Reserve direct `read_file` / `file_search` / `git` for verifying agent claims and reading the scoreboard. Mapping the codebase, running benchmarks, reading AGENTS.md — those go to sub-agents.
 - **One attributed change per loop iteration.** Causality is cheap to preserve and expensive to recover.
 - **The scoreboard is the shared truth.** Every iteration appends; nothing gets overwritten. Sub-agents and the oracle both read from it.
-- **The oracle is the stop signal.** You don't decide when to stop on gut feel — you ask, with the scoreboard in selection, and respect the answer.
+- **use measured stop conditions.** consult the oracle with the scoreboard selected. stop when the target or another stated condition applies.
 
-## Phase 0: Workspace Verification (REQUIRED)
+## phase 0: workspace verification (required)
 
 Before any optimization work, bind to the target codebase using its working directory:
 
@@ -47,15 +47,15 @@ This auto-resolves to the window containing your project. No need to list window
 Then retry the `working_dirs` bind.
 
 ---
-## Phase 1: Surface Mapping & Bottleneck Scouting (delegate to explore agents)
+## phase 1: surface mapping & bottleneck scouting (delegate to explore agents)
 
-Your job here is **prompt translation + orchestrated scouting**, not codebase exploration. Spend at most 1–2 navigation calls turning the user's request into the codebase's actual nouns, then **fan out explore agents in parallel** to scout for bottleneck candidates around the named target.
+Your job here is **prompt translation + orchestrated scouting**, not codebase exploration. Spend at most 1–2 navigation calls turning the request into the codebase's actual nouns, then **fan out explore agents in parallel** to scout for bottleneck candidates around the named target.
 
 The user names what to optimize, but the actual bottleneck is rarely just inside that function. It can sit in the **callers** (called 10k times in a tight loop, where the loop itself is the cost), in the **inputs** (caller wastefully constructs the data the target consumes), in **adjacent operations** that run together in the same code path, or in **shared infrastructure** the target touches (locks, caches, allocators). Scouting radiates outward from the named target so Phase 2's plan is grounded in evidence about where time is actually going.
 
-### 1a. Translate the prompt
+### 1a. translate the prompt
 
-Rewrite the user's request in the repo's likely terminology — don't dive deeper yet.
+Rewrite the request in the repo's likely terminology — don't dive deeper yet.
 
 Example:
 - Raw: *"Speed up search"*
@@ -67,7 +67,7 @@ Two narrow exceptions:
 - **Profile data already exists** (user attached a sample report or pointed at a recent profiler trace in the repo) → dispatch one focused explore to read the trace + summarize bottleneck candidates, then go to Phase 2. Skip the rest of the fan-out.
 - **User gave a feature/feeling** ("feels slow during X") → full fan-out, plus add `<X>`-entry-point discovery to the "Target & call graph" brief.
 
-### 1b. Dispatch explore agents in parallel
+### 1b. dispatch explore agents in parallel
 
 Spawn explore agents — each with one narrow question — for the facts you need before `context_builder` can plan. **The bottleneck-candidates explore is the heart of this phase.** Typical fan-out:
 
@@ -107,11 +107,11 @@ Use `detach:true` so they run concurrently:
 {"tool":"agent_run","args":{"op":"wait","session_ids":["<id1>","<id2>","<id3>","<id4>","<id5>"],"timeout":180}}
 ```
 
-> ⚠️ **Detached agents may block on permission approvals.** Poll periodically or use `op=wait` so you can approve and keep them unblocked.
+> **Detached agents may block on permission approvals.** Poll periodically or use `op=wait` so you can approve and keep them unblocked.
 
 If the bottleneck-candidates explore returns thin or generic results ("nothing obviously expensive"), that's a signal — either the area is genuinely well-tuned and the user's complaint is elsewhere, or the explore needed broader radius. Either way, **re-dispatch one targeted explore** with a wider radius (e.g., "look two call levels up") rather than reading the code yourself.
 
-### 1c. Synthesize the target
+### 1c. synthesize the target
 
 When the explores return, write down (in your head or as scratch — no need for a file yet):
 
@@ -127,7 +127,7 @@ You'll feed all five to `context_builder` in Phase 2.
 
 ---
 
-## Phase 2: Plan Setup with `context_builder` (plan mode)
+## phase 2: plan setup with `context_builder` (plan mode)
 
 Now that the surface is mapped and bottleneck candidates are in hand, route the setup design through `context_builder` in **plan mode**. One call produces:
 
@@ -150,7 +150,7 @@ If the plan looks thin (no concrete instrumentation site, vague candidates), ref
 
 ---
 
-## Phase 3: Land Instrumentation + Baseline (delegate to pair)
+## phase 3: land instrumentation + baseline (delegate to pair)
 
 You don't run measurements. Dispatch a single `pair` agent to execute the setup plan:
 
@@ -169,7 +169,7 @@ When the pair returns:
 - **Sanity-check variance.** If the variance band is large enough to swallow a 10–20% optimization, that's a problem. Steer the pair to take more samples or narrow the workload before continuing.
 - **Don't read the instrumentation diff yet.** If concerns surface in later phases, dispatch a narrow explore to summarize the diff for you.
 
-### Housekeeping
+### housekeeping
 
 Sessions persist after agents finish — useful when you might revisit output, but they pile up over a multi-agent workflow. Once you've recorded what an agent produced, you can dismiss its session:
 
@@ -181,13 +181,13 @@ Explore-agent sessions are good to dismiss right away — narrow reconnaissance,
 
 ---
 
-## Phase 4: The Optimization Loop
+## phase 4: the optimization loop
 
 One iteration = one attributed change + one re-measurement. Running multiple optimizations in parallel destroys causality — keep the loop **serial** by default.
 
 Loop until one of the **termination criteria** in 4d fires.
 
-### 4a. Plan the next optimization
+### 4a. plan the next optimization
 
 The Phase 2 plan listed first-pass candidates. For iteration 1, pick the top-ranked one and skip straight to 4b. From iteration 2 onward, use `context_builder` to plan the next single change with the scoreboard in selection. The Phase 2 plan's candidates are still the seed; `context_builder` refines whichever you select next. Reach for the oracle in this slot only when you already have a fully-formed candidate and just need a sanity check before dispatch.
 
@@ -206,7 +206,7 @@ The Phase 2 plan listed first-pass candidates. For iteration 1, pick the top-ran
 
 If the plan proposes more than one change, pick the one with the **best expected delta per unit of risk**.
 
-### 4b. Dispatch one full optimize-and-harden loop
+### 4b. dispatch one full optimize-and-harden loop
 
 Dispatch **one `pair` agent** for the selected change. The brief covers landing the optimization **and** hardening it in one shot — implementation, tests, re-measurement, scoreboard append:
 
@@ -221,7 +221,7 @@ Dispatch **one `pair` agent** for the selected change. The brief covers landing 
 
 Always use `pair`. Optimizations involve trade-offs (correctness, locality, complexity) that benefit from the more capable agent, and re-measurement requires interpreting noisy results. Use `engineer` only if you have a specific reason — and the user has agreed it's safe to drop trade-off review.
 
-### 4c. Verify (without re-reading the codebase)
+### 4c. verify (without re-reading the codebase)
 
 Verify the agent's output against the plan's done-when criteria — for optimize, that's the scoreboard, not the diff. Optimization-specific checks, all designed for **minimal direct reads**:
 
@@ -232,7 +232,7 @@ Verify the agent's output against the plan's done-when criteria — for optimize
 
 If the change regressed the metric or broke correctness that the sub-agent didn't catch, **steer** the same agent to fix it before opening a new loop. Rolling back counts as progress — record the attempt in the scoreboard so the next plan knows that path was tried.
 
-### 4d. Ask the oracle for the next plan (and the stop decision)
+### 4d. ask the oracle for the next plan (and the stop decision)
 
 After a successful iteration, refresh the selection and ask the oracle both questions in one call:
 
@@ -254,7 +254,7 @@ The oracle's answer determines the loop's next step:
 - **"We're done" / "Diminishing returns" / target met** → exit the loop, go to Phase 5.
 - **"Can't tell — measurement is too noisy" or "behavior may have regressed"** → **stop optimizing.** The next dispatch must be a pair to harden the instrumentation or fix the regression. Do not plan a new optimization on top of an unreliable measurement — every later result becomes uninterpretable.
 
-### Termination criteria (stop conditions)
+### termination criteria (stop conditions)
 
 Exit the loop when **any** of these fire:
 
@@ -264,11 +264,11 @@ Exit the loop when **any** of these fire:
 4. **Oracle can't propose a plausible next move.** Two consecutive "I'm not sure what to try" responses means the search has stalled.
 5. **Regression budget exhausted.** If correctness keeps breaking faster than performance improves, stop and escalate to the user.
 
-### Parallelism note
+### parallelism note
 
 The loop is serial by design — attribution collapses when you run multiple changes at once. The one legitimate use of parallelism is **evaluating alternatives** for the same slot: dispatch two pair agents to try two different candidate optimizations on branches or temporary copies, pick the winner, discard the loser. This is advanced and rarely worth the coordination cost; don't reach for it unless the oracle explicitly suggests it.
 
-### Housekeeping (loop)
+### housekeeping (loop)
 
 Same session-cleanup hygiene as Phase 3. Also delete superseded plan exports each iteration so `prompt-exports/` reflects only live work:
 
@@ -280,9 +280,9 @@ Plan and review exports generated during orchestration (via `export_response:tru
 
 ---
 
-## Phase 5: Final Rollup
+## phase 5: final rollup
 
-After all iterations complete, give the user a **final rollup**:
+after the final iteration, report:
 - What was accomplished per iteration
 - Any failures or partial completions
 - Any conflicts or coordination issues that surfaced
@@ -298,7 +298,7 @@ Specifically for optimize:
 
 ---
 
-## Role Summary
+## role summary
 
 You (the agent) own triage, prompt translation, scoreboard reads, sub-agent verification, and the stop decision. Everything else is delegated:
 
@@ -313,7 +313,7 @@ You (the agent) own triage, prompt translation, scoreboard reads, sub-agent veri
 | Delegated spot-check / diff summary | ✅ on demand | — | — | — | — |
 | Decide continue vs stop | — | — | — | — | ✅ Primary |
 
-**Cheat sheet for the four operations you'll repeat:**
+**repeated operations:**
 ```
 agent_run op=start  model_id=<explore|pair>  detach=true       # dispatch
 agent_run op=wait   session_ids=["..."]      timeout=N         # block
@@ -323,21 +323,21 @@ agent_run op=steer  session_id="..."         wait=true         # correct
 
 ---
 
-## Anti-patterns
+## mistakes to avoid
 
-- 🚫 Skipping the bottleneck-candidates explore because the user named a specific function — even with a named target, callers and inputs often dominate the cost
-- 🚫 Skipping `context_builder` in Phase 2 and dispatching the setup pair from your own sketch — you'll lose the candidate queue and the instrumentation gating discipline
-- 🚫 Letting `context_builder` re-derive optimization candidates from scratch instead of seeding it with the bottleneck candidates from Phase 1 — the explore already paid for that scouting; pass it forward
-- 🚫 Starting to optimize before defining the metric and stop criterion — you won't know when you're done
-- 🚫 Shipping measurement overhead to production — always gate metrics behind a debug/test build flag
-- 🚫 Putting instrumentation in the same file as the code being measured — it belongs in a secondary test/support file
-- 🚫 Skipping Phase 0 (Workspace Verification) — you must confirm the target codebase is loaded first
-- 🚫 Taking a single sample as a baseline — one number isn't a measurement, it's a guess
-- 🚫 Running multiple optimizations in one loop iteration — you'll never know which change produced which delta
-- 🚫 Forgetting to re-run tests after the optimization — speed without correctness isn't a win
-- 🚫 Skipping the oracle check and looping on your own judgment — the oracle sees the whole scoreboard; use it
-- 🚫 Overwriting scoreboard rows instead of appending — historical data is how you spot regressions and dead ends
+- Skipping the bottleneck-candidates explore because the user named a specific function — even with a named target, callers and inputs often dominate the cost
+- Skipping `context_builder` in Phase 2 and dispatching the setup pair from your own sketch — you'll lose the candidate queue and the instrumentation gating discipline
+- Letting `context_builder` re-derive optimization candidates from scratch instead of seeding it with the bottleneck candidates from Phase 1 — the explore already paid for that scouting; pass it forward
+- Starting to optimize before defining the metric and stop criterion — you won't know when you're done
+- Shipping measurement overhead to production — always gate metrics behind a debug/test build flag
+- Putting instrumentation in the same file as the code being measured — it belongs in a secondary test/support file
+- Skipping Phase 0 (Workspace Verification) — you must confirm the target codebase is loaded first
+- Taking a single sample as a baseline — one number isn't a measurement, it's a guess
+- Running multiple optimizations in one loop iteration — you'll never know which change produced which delta
+- Forgetting to re-run tests after the optimization — speed without correctness isn't a win
+- Skipping the oracle check and looping on your own judgment — the oracle sees the whole scoreboard; use it
+- Overwriting scoreboard rows instead of appending — historical data is how you spot regressions and dead ends
 
 ---
 
-Now begin with Phase 0.
+begin with phase 0.

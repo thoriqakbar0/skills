@@ -1,16 +1,16 @@
-# Interactive HTML Artifact
+# interactive HTML artifact
 
-Create a polished, self-contained interactive HTML artifact from the user's description.
+create a complete interactive HTML artifact from the request.
 
-## Usage
+## usage
 
 ```text
 /prompts:html-artifact "an interactive pricing calculator"
 ```
 
-## Steps
+## steps
 
-1. Read the user's description from `$ARGUMENTS` and inspect any referenced files or existing project conventions. Ask at most one question only when a missing choice would materially change the artifact; otherwise make a reasonable assumption and begin.
+1. Read `$ARGUMENTS`, referenced files, and project conventions. ask one question only when a missing choice changes the result.
 
 2. Load and apply these skills:
    - `/Users/thor/.codex/skills/executive-communication/SKILL.md` first, to turn the source into an answer-first information hierarchy with material evidence, implications, uncertainty, and an explicit decision or action.
@@ -59,9 +59,9 @@ Create a polished, self-contained interactive HTML artifact from the user's desc
    - Confirm no essential information is available only through hover, animation, gesture, tabs, or modal state.
    - Fix console errors and obvious interaction or rendering defects.
 
-10. Save the final artifact in the current workspace unless the user gives a destination. Report the file path, the main takeaway, the primary interaction, and the browser checks performed. Do not claim untested behavior.
+10. Save the artifact in the current workspace unless the request gives a destination. report the path, takeaway, interaction, and browser checks.
 
-## Rules
+## rules
 
 - Build the artifact; do not stop at a mockup, design description, or code snippet.
 - Content hierarchy comes before visual hierarchy; visual hierarchy must preserve it.

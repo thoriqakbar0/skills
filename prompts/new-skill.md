@@ -1,16 +1,16 @@
-# New Skill
+# new skill
 
-Create a skill from conversation history or user description.
+create a reusable skill from the conversation or request.
 
-## Steps
+## steps
 
 1. **Detect context**
    - If history exists: auto-capture workflow into skill
-   - If no history: parse user's description
+   - if no history exists, use the request.
    - Use thread context clues to infer name, description, and triggers
 
 2. Determine host (Codex, Claude, Cursor) from current runtime
-   - Say: "Since I am {host}, I will install it in {host}"
+   - report the selected host and installation path.
 
 3. Propose the skill name, description, triggers, location, and whether scripts are needed
    - Proceed unless user rejects or corrects
@@ -40,26 +40,26 @@ description: one-line
 allowed_tools: [list inferred from context]
 ---
 
-# Skill Name
+# skill name
 
-## When to use
+## when to use
 - trigger conditions
 
-## Steps
+## steps
 1. ...
 2. ...
 
-## Tools created
+## tools created
 - scripts/run.py: what it does
 ```
 
-7. Report created files
+7. report each created file and the invocation name.
 
-## Flags
+## flags
 
 `--interview`: Ask detailed questions (purpose, triggers, inputs, outputs, edge cases)
 
-## Script Templates
+## script templates
 
 **Python (uv):**
 ```python
@@ -82,7 +82,7 @@ set -euo pipefail
 echo "ok"
 ```
 
-## Rules
+## rules
 
 - Default to capturing conversation if history exists
 - Default host to current runtime and install there

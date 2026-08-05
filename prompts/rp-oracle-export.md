@@ -6,22 +6,22 @@ repoprompt_skills_version: 61
 repoprompt_variant: mcp
 ---
 
-# ChatGPT Prompt Export
+# ChatGPT prompt export
 
 Raw request: $ARGUMENTS
 
-Your job: select the right files and export a prompt file that another model can act on directly.
+select the required files and export a prompt that another model can use directly.
 
-**Before you do anything else**, extract the real task from the raw request above. Users often phrase this as "export a prompt for X" or "write a prompt about Y" — strip away any meta-framing about exporting/prompting and identify the underlying problem. For example:
+first, remove export instructions from the raw request and identify the task to solve. examples:
 - "export a prompt to evaluate the auth refresh logic" → the task is "evaluate the auth refresh logic"
 - "write a ChatGPT prompt about the token caching bug" → the task is "investigate the token caching bug"
 - "review the last 3 commits" → the task is already clean
 
 Use the extracted task (not the raw request) for all downstream steps — intent classification, `context_builder` instructions, and the final exported prompt.
 
-## Rules
+## rules
 
-- Infer **Question / Plan / Review** when obvious. Ask only if unclear.
+- select **Question**, **Plan**, or **Review** from the request. ask only when the scope remains unclear.
 - For vague requests, use repo evidence before asking questions.
 - Use the fast path only when the scope is already small, concrete, and obviously file-local.
 - For broad **Question/Plan** exports, `context_builder` is the default path.
@@ -31,12 +31,12 @@ Use the extracted task (not the raw request) for all downstream steps — intent
 - If you used the fast path, review the selection and prompt text before exporting.
 - If you used `context_builder`, trust its curated selection, budget, and generated prompt by default; only re-check or adjust prompt/selection/tokens if you noticed a concrete issue.
 - Export to a unique repo-local file, usually in `prompt-exports/`.
-- Derive a short slug from the user's request and use it in the filename.
+- Derive a short slug from the request and use it in the filename.
 - Use a relative repo-local path by default; do not use an absolute path or another folder unless the user explicitly asks for it.
 
-## Workflow
+## workflow
 
-### 0: Workspace Verification (REQUIRED)
+### 0: workspace verification (required)
 
 Before any building context, bind to the target codebase using its working directory:
 
@@ -54,7 +54,7 @@ This auto-resolves to the window containing your project. No need to list window
 Then retry the `working_dirs` bind.
 
 ---
-### 1. Determine intent and scope
+### 1. determine intent and scope
 
 Infer the prompt type from the request:
 - **Review** for git diff / PR / branch comparison requests — i.e. the user wants to inspect *changes*
@@ -66,7 +66,7 @@ If the request is vague:
 - for **Review**: inspect git state first
 - for **Question/Plan**: if it sounds broad, architectural, evaluative, redesign-oriented, or likely multi-file, skip manual exploration and go straight to `context_builder`
 
-Ask **one specific question** only if needed, and base it on the repo state you found.
+ask one specific question only when repository evidence cannot resolve the scope.
 Good question shapes:
 - “I see changes in A and B. Do you want review of these current uncommitted changes, or against `main`?”
 - “I found likely touchpoints in X and Y. Is the fix plan for X only, or this broader flow?”
@@ -74,11 +74,11 @@ Good question shapes:
 
 **If the scope is still unclear, STOP and ask the user.** Do not ask generic workflow questions when you could ask a concrete scope question instead.
 
-### 2. Choose context path
+### 2. choose context path
 
 Because this prompt does not expose the workflow export budget directly, prefer `context_builder` unless the review scope is obviously tiny.
 
-#### Review
+#### review
 
 Start by checking git state:
 ```json
@@ -86,13 +86,13 @@ Start by checking git state:
 {"tool":"git","args":{"op":"diff","detail":"files"}}
 ```
 
-#### Review Scope Confirmation
+#### review scope confirmation
 
-Determine the comparison scope from the user's request and git state.
+Determine the comparison scope from the request and git state.
 
 **If the user already specified a clear comparison target** (e.g., "review against main", "compare with develop", "review last 3 commits"), **skip confirmation and proceed** using the scope they specified.
 
-**If the scope is ambiguous or not specified**, ask the user to clarify:
+**If the scope is ambiguous or not specified**, ask for clarification:
 - **Current branch**: What branch are you on? (from git status)
 - **Comparison target**: What should changes be compared against?
   - `uncommitted` – All uncommitted changes vs HEAD (default)
@@ -116,7 +116,7 @@ For review exports, explicitly reference the diff / changed files in the context
 
 **Always include the phrase "code review" in your `context_builder` instructions for Review exports.** This phrase activates diff analysis in the Context Builder agent. Without it, the builder treats the request as a general exploration.
 
-#### Question / Plan
+#### question / plan
 
 Default to `context_builder` for any request that is broad, architectural, evaluative, redesign-oriented, or likely to touch multiple files.
 
@@ -148,7 +148,7 @@ Otherwise use `context_builder`:
 }}
 ```
 
-### 3. Final check (fast path only — skip after `context_builder`)
+### 3. final check (fast path only — skip after `context_builder`)
 
 **If you used `context_builder`, skip this step entirely and go straight to Step 4.** The builder already curated the selection, managed the token budget, and wrote the prompt. Do not read the prompt back, do not inspect the selection, do not check token counts, and do not critique, rewrite, or "improve" the generated prompt text. Treat the builder's output as the final payload for export.
 
@@ -168,14 +168,14 @@ If available in this surface, the fast path may also inspect token state:
 
 If the prompt wording or selection is off, fix it before exporting.
 
-### 4. Export
+### 4. export
 
 Use a unique repo-local relative path such as:
 - `prompt-exports/<yyyy-mm-dd>-<hhmmss>-question-<slug-from-request>.md`
 - `prompt-exports/<yyyy-mm-dd>-<hhmmss>-plan-<slug-from-request>.md`
 - `prompt-exports/<yyyy-mm-dd>-<hhmmss>-review-<slug-from-request>.md`
 
-Choose `<slug-from-request>` by summarizing the user's request into a short filesystem-safe phrase. Prefer descriptive slugs like `collapsing-tool-logic` or `agent-transcript-redesign`, not generic names like `export` or `question`.
+Choose `<slug-from-request>` by summarizing the request into a short filesystem-safe phrase. Prefer descriptive slugs like `collapsing-tool-logic` or `agent-transcript-redesign`, not generic names like `export` or `question`.
 
 Unless the user explicitly asks for another destination, keep the export path relative and repo-local under `prompt-exports/`.
 
@@ -188,7 +188,7 @@ Preset mapping:
 {"tool":"prompt","args":{"op":"export","path":"prompt-exports/<unique filename>.md","copy_preset":"<standard|plan|codeReview>"}}
 ```
 
-## Anti-patterns
+## mistakes to avoid
 
 - Asking generic workflow questions before checking repo state
 - Skipping `context_builder` for branch / PR / large review exports
@@ -204,4 +204,4 @@ Preset mapping:
 - Writing to an absolute path or outside the repo by default when the user did not ask for that
 - Passing export/prompt meta-framing to `context_builder` — instructions like "export a prompt for X" or "build context for a ChatGPT prompt about Y" cause the builder to write a prompt *about prompting* instead of a prompt that solves X. Always pass the extracted task directly.
 
-Report the final export path, prompt type, whether you used the fast path or `context_builder`, and token count if available.
+report the export path, prompt type, context path, and available token count.

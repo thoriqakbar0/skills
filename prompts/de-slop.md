@@ -1,18 +1,18 @@
-# De-Slop
+# de-slop
 
-Before a PR, remove obvious AI artifacts and cleanup noise.
+remove AI artifacts and unrelated cleanup before a PR.
 
-## Checklist
+## checklist
 
-- Delete pointless scratch markdown (NOTES/PLAN/IDEAS/TODO) unless it’s real docs
-- Remove redundant comments and filler docstrings
-- Replace mock-heavy tests with real assertions where possible
-- Remove fake/uncited metrics
+- remove scratch notes unless they are maintained documentation.
+- remove comments and docstrings that repeat the code.
+- replace excessive mocks with behavior checks when practical.
+- remove invented or uncited metrics.
 
-## Flow
+## flow
 
-1. Show a dry-run list of issues found (file + line).
-2. Ask what to fix (`1 3 4`, `1-5`, `all`, `none`).
-3. Apply selected edits and summarize.
+1. list each finding with its file and line.
+2. ask which findings to fix: `1 3 4`, `1-5`, `all`, or `none`.
+3. apply the selected edits and summarize the result.
 
 Safety: do not delete `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, or `docs/**` without explicit confirmation.

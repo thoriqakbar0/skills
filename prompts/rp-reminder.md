@@ -6,11 +6,11 @@ repoprompt_skills_version: 61
 repoprompt_variant: mcp
 ---
 
-# RepoPrompt Tools Reminder
+# RepoPrompt tools reminder
 
-Continue your current workflow using RepoPrompt MCP tools instead of built-in alternatives.
+continue the current workflow with the matching RepoPrompt tool.
 
-## File & Code
+## file & code
 
 | Task | Use | Not |
 |------|-----|-----|
@@ -22,7 +22,7 @@ Continue your current workflow using RepoPrompt MCP tools instead of built-in al
 | Create / delete / move | `file_actions` | touch, rm, mv, Write |
 | Git status / diff / log / blame | `git` | shelling out for analysis |
 
-## Context & Planning
+## context & planning
 
 | Tool | Use for |
 |------|---------|
@@ -32,11 +32,11 @@ Continue your current workflow using RepoPrompt MCP tools instead of built-in al
 | `context_builder` | Heavy discovery sub-agent — describe the task, it curates files + rewrites the prompt. `response_type`: `clarify` / `plan` / `question` / `review`. Pass `export_response:true` to hand the result to a child agent. |
 | `ask_oracle` | Chat-mode reasoning over the current selection. Continue existing chats (`new_chat:false`) rather than opening new ones. Modes: `chat` / `plan` / `review`. |
 | `oracle_chat_log` | Recover recent Oracle messages after compaction. |
-| `ask_user` | Ask the user when ambiguity is load-bearing — don't guess at requirements. |
+| `ask_user` | Ask one specific question when a missing answer changes the result. |
 
-## Agent Delegation — `agent_run` / `agent_manage`
+## agent delegation — `agent_run` / `agent_manage`
 
-Dispatch a sub-agent when a side investigation or delegated chunk of work would otherwise flood this session's context.
+dispatch a sub-agent for a separate investigation or implementation scope.
 
 **Role labels** (pass as `model_id` on `agent_run op=start`):
 
@@ -55,7 +55,7 @@ Dispatch a sub-agent when a side investigation or delegated chunk of work would 
 
 **Export handoff:** when `context_builder` or `ask_oracle` returns `oracle_export_path`, include that path inside the child agent's next `message` so it reads the export with `read_file`.
 
-## Quick Reference
+## quick reference
 
 ```json
 // Search · Read · Edit · File ops
@@ -76,4 +76,4 @@ Dispatch a sub-agent when a side investigation or delegated chunk of work would 
 {"tool":"agent_manage","args":{"op":"cleanup_sessions","session_ids":["<uuid>"]}}
 ```
 
-Continue with your task using these tools.
+continue the task with the tools above.

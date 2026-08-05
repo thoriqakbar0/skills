@@ -6,13 +6,13 @@ repoprompt_skills_version: 61
 repoprompt_variant: mcp
 ---
 
-# MCP Builder Mode
+# MCP builder mode
 
 Task: $ARGUMENTS
 
-Build deep context via `context_builder` to get a plan, then implement directly. Use follow-up reasoning only when navigating the selected code proves difficult or the plan leaves a concrete gap.
+use `context_builder` to create a grounded plan, then implement it. use `oracle_send` only for a specific unresolved gap.
 
-## The Workflow
+## the workflow
 
 0. **Verify workspace** – Confirm the target codebase is loaded
 1. **Quick scan** – Understand how the task relates to the codebase
@@ -22,7 +22,7 @@ Build deep context via `context_builder` to get a plan, then implement directly.
 
 ---
 
-## Before you implement
+## before you implement
 
 Work through the phases in order:
 1. Completed Phase 0 (Workspace Verification)
@@ -33,7 +33,7 @@ The quick scan is orientation only — `context_builder` does the deep explorati
 
 ---
 
-## Phase 0: Workspace Verification (REQUIRED)
+## phase 0: workspace verification (required)
 
 Before any exploration, bind to the target codebase using its working directory:
 
@@ -51,7 +51,7 @@ This auto-resolves to the window containing your project. No need to list window
 Then retry the `working_dirs` bind.
 
 ---
-## Phase 1: Quick Scan
+## phase 1: quick scan
 
 Keep this phase brief — `context_builder` handles the deep exploration.
 
@@ -66,13 +66,13 @@ Then use targeted searches to understand how the task maps to the codebase:
 {"tool":"get_code_structure","args":{"paths":["RootName/likely/relevant/area"]}}
 ```
 
-Use what you learn to **reformulate the user's prompt** with added clarity—reference specific modules, patterns, or terminology from the codebase.
+rewrite the request with specific modules, patterns, and repository terms.
 
 Your goal is orientation, not deep understanding — `context_builder` does the heavy lifting.
 
 ---
 
-## Phase 2: Context Builder
+## phase 2: context builder
 
 Call `context_builder` with your informed prompt. Use `response_type: "plan"` to get an actionable architectural plan.
 
@@ -83,7 +83,7 @@ Call `context_builder` with your informed prompt. Use `response_type: "plan"` to
 }}
 ```
 
-**What you get back:**
+**the result includes:**
 - Smart file selection (automatically curated within token budget)
 - Architectural plan grounded in actual code
 - `chat_id` for follow-up conversation
@@ -94,7 +94,7 @@ Call `context_builder` with your informed prompt. Use `response_type: "plan"` to
 
 ---
 
-## Phase 3: Ask `oracle_send` only if needed
+## phase 3: ask `oracle_send` only if needed
 
 `oracle_send` deep-reasons over the files selected by `context_builder`. It sees those selected files **completely** (full content, not summaries), but it **only sees what's in the selection** — nothing else.
 
@@ -121,14 +121,14 @@ If the answer depends on files outside the current selection, `oracle_send` cann
 - Spotting cross-file connections that piecemeal reading might miss
 - Answering targeted "what am I missing in this selected context" questions
 
-**Don't expect:**
+**limits:**
 - Knowledge of files outside the selection
 - Repository exploration or missing-file discovery — that's `context_builder`'s job
-- Implementation — that's your job
+- implementation; you own this work.
 
 ---
 
-## Phase 4: Direct Implementation
+## phase 4: direct implementation
 
 Before implementing, verify you have:
 - [ ] A builder result available (`chat_id` if follow-up is needed)
@@ -162,7 +162,7 @@ Implement the plan directly with the editing tools; use `oracle_send` only for r
 
 ---
 
-## Key Guidelines
+## key guidelines
 
 **Token limit:** Stay under ~160k tokens. Check with `manage_selection(op:"get")` if unsure. Context builder manages this, but be aware if you add files.
 
@@ -176,20 +176,20 @@ Implement the plan directly with the editing tools; use `oracle_send` only for r
 
 ---
 
-## Anti-patterns to Avoid
+## mistakes to avoid
 
-- 🚫 Asking `oracle_send` to implement changes for you – implement directly with editing tools
-- 🚫 Asking `oracle_send` about files it cannot see in the current selection
-- 🚫 Treating Phase 3 as mandatory when the builder's plan is already clear
-- 🚫 Reopening or second-guessing the builder's plan by default instead of trusting it
-- 🚫 Leaning on manual `manage_selection` work to patch coverage gaps that should be handled by `context_builder`
-- 🚫 Skipping `context_builder` and going straight to implementation – you'll miss context
-- 🚫 Using `manage_selection` with `op:"clear"` – this undoes `context_builder`'s work; only use small targeted additions if absolutely necessary
-- 🚫 Exceeding ~160k tokens – use slices if needed
-- 🚫 Extended reading before calling `context_builder` – a quick skim is fine; let the builder do the heavy lifting
-- 🚫 Reading full file contents during Phase 1 – save that for after `context_builder` builds context
-- 🚫 Convincing yourself you understand enough to skip `context_builder` – you don't
+- Asking `oracle_send` to implement changes for you – implement directly with editing tools
+- Asking `oracle_send` about files it cannot see in the current selection
+- Treating Phase 3 as mandatory when the builder's plan is already clear
+- Reopening or second-guessing the builder's plan by default instead of trusting it
+- Leaning on manual `manage_selection` work to patch coverage gaps that should be handled by `context_builder`
+- Skipping `context_builder` and going straight to implementation – you'll miss context
+- Using `manage_selection` with `op:"clear"` – this undoes `context_builder`'s work; only use small targeted additions if absolutely necessary
+- Exceeding ~160k tokens – use slices if needed
+- Extended reading before calling `context_builder` – a quick skim is fine; let the builder do the heavy lifting
+- Reading full file contents during Phase 1 – save that for after `context_builder` builds context
+- skipping `context_builder` because the quick scan looks sufficient.
 
 ---
 
-**Your job:** Get a solid plan from `context_builder`, trust it by default, use `oracle_send` only when navigating the selected code proves difficult or the plan leaves a concrete unresolved gap, then implement directly and completely.
+get a grounded plan from `context_builder`. resolve specific gaps with `oracle_send`, then implement and verify the complete change.

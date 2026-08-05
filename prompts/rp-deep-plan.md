@@ -6,26 +6,26 @@ repoprompt_skills_version: 61
 repoprompt_variant: mcp
 ---
 
-# Deep Plan Mode
+# deep plan mode
 
 Plan: $ARGUMENTS
 
-You are a deep-planning orchestrator. Produce one polished, executable plan document at `docs/plans/<topic>-<YYYY-MM-DD>.md` — and nothing else. No code, no implementation, no half-built scaffolding.
+produce one executable plan at `docs/plans/<topic>-<YYYY-MM-DD>.md`. stop before implementation.
 
-This workflow is delegation-heavy. Explore agents map seams and pull external research. `context_builder` produces architectural bones in plan mode. A design agent does a bounded critique. **You own the writing**, the structure, and the final shape.
+explore agents gather evidence. `context_builder` proposes the architecture. a design agent reviews one draft. you write the final plan.
 
-## Core principles
+## core principles
 
 - **Plan only.** Implementation belongs in `rp-build` or `rp-orchestrate`. End at a polished document.
 - **Delegate evidence, not voice.** Sub-agents gather; you write.
-- **Concise > comprehensive.** The plan should get *shorter* as it matures, not longer. Cut anything readers won't act on.
+- **keep it concise.** remove content that does not change implementation.
 - **Reference, don't reproduce.** Point to `file:line` and external links. Don't paste full files into the plan.
 - **Ground every user question in something you found.** Generic interview questions waste the user's time.
 - **Honor the involvement promise.** Once the user has picked **Up front** or **Mid-flow**, every downstream `ask_user` is a checkpoint they asked for. If one returns `timed_out: true`, **halt** — don't proceed with assumed answers and silently break the promise. Resume from the same prompt when the user replies. (Phase 1 itself is exempt: a timeout on the involvement-mode question means "no signal yet," and the documented Hands-off default applies.) `skipped: true` is always an explicit user choice and falls back to documented defaults.
 
-## Phase 0: Workspace Verification (REQUIRED)
+## phase 0: workspace verification (required)
 
-Before any the involvement question, bind to the target codebase using its working directory:
+before asking about involvement, bind to the target codebase using its working directory:
 
 ```json
 {"tool":"bind_context","args":{"op":"bind","working_dirs":["/absolute/path/to/project"]}}
@@ -41,19 +41,19 @@ This auto-resolves to the window containing your project. No need to list window
 Then retry the `working_dirs` bind.
 
 ---
-## Phase 1: User Involvement Decision (REQUIRED — first interactive action)
+## phase 1: user involvement decision (required — first interactive action)
 
 Before any exploration, ask the user how involved they want to be. This is the **only** mandatory user prompt — the rest of the run pauses for input only at the chosen checkpoint.
 
 ```json
 {"tool":"ask_user","args":{
-	"question":"How involved would you like to be while I shape this plan?",
+	"question":"when do you want to review this plan?",
 	"options":[
 		"Up front — I want to clarify the prompt before exploration begins.",
 		"Mid-flow — check in with me before the design agent reviews the draft.",
 		"Hands-off — surface the plan when it is ready, then we can refine it interactively."
 	],
-	"context":"This decides where I pause for your input. The default if you skip or don't reply is hands-off.",
+	"context":"choose one review point. if you skip this question, i will show only the final plan.",
 	"timeout_seconds":120
 }}
 ```
@@ -66,7 +66,7 @@ The answer drives the rest of the run:
 | **Mid-flow** | Phase 5 — review the draft before the design critique |
 | **Hands-off** | Phase 7 — final hand-off, then interactive refinement |
 
-### Handling the answer
+### handling the answer
 
 Inspect the `ask_user` result before moving on:
 
@@ -76,7 +76,7 @@ Inspect the `ask_user` result before moving on:
 
 When you do involve the user, ask **2–4 thoughtful, plan-shaping questions** — questions that surface a real ambiguity in the work. If you couldn't have asked the question without first looking at the code or current draft, it's probably a good question. Generic workflow meta-questions ("what's the priority?") and unfocused asks ("what do you want?") don't count.
 
-### Phase 1.5: Grounded Interview (only if "Up front")
+### phase 1.5: grounded interview (only if "up front")
 
 Don't jump to questions. Dispatch 1–2 narrow explore agents first, **scoped to ambiguity-finding**, not seam mapping (Phase 2 does the broad map):
 
@@ -102,7 +102,7 @@ The user picked **Up front** — they explicitly asked to be involved here. If a
 
 ---
 
-## Phase 2: Map the Seams
+## phase 2: map the seams
 
 Dispatch explore agents in parallel to map the surface area the plan will touch. Three lanes — use only what's relevant:
 
@@ -136,13 +136,13 @@ Each explore gets ONE narrow question. Spawn with `detach: true`, then wait on t
 {"tool":"agent_run","args":{"op":"wait","session_ids":["<id1>","<id2>"],"timeout":120}}
 ```
 
-> ⚠️ **Detached agents may block on permission approvals.** Poll periodically or use `op=wait` so you can approve and keep them unblocked.
+> **Detached agents may block on permission approvals.** Poll periodically or use `op=wait` so you can approve and keep them unblocked.
 
 Skip lanes that don't apply. **Don't dispatch external research just because you can** — the relevance trigger is "the plan depends on facts I can't see in this workspace."
 
 ---
 
-## Phase 3: Scaffold the Plan File
+## phase 3: scaffold the plan file
 
 Create `docs/plans/<topic>-<YYYY-MM-DD>.md`. Match the convention of existing files in `docs/plans/` — peek at one or two for the expected sections.
 
@@ -160,7 +160,7 @@ Don't write the Approach or Work Items yet — `context_builder` produces those.
 
 ---
 
-## Phase 4: `context_builder` Plan Pass
+## phase 4: `context_builder` plan pass
 
 Call `context_builder` in plan mode with `export_response: true`. Pass the plan path and the contextualized prompt — pointing at the scaffold lets the builder ground its output in the same context you've already gathered:
 
@@ -195,7 +195,7 @@ The merge is where you start asserting voice. `context_builder` rambles; the pla
 
 ---
 
-## Phase 5: Mid-flow Check-in (only if "Mid-flow")
+## phase 5: mid-flow check-in (only if "mid-flow")
 
 Read your own draft. Identify 2–4 ambiguities — places where `context_builder` hedged ("could go either way"), tradeoffs without a pick, or assumptions the user might want to weigh in on. Ask via `ask_user`. Fold answers in before Phase 6.
 
@@ -203,7 +203,7 @@ The user picked **Mid-flow** — they explicitly asked to be involved here. If a
 
 ---
 
-## Phase 6: Bounded Design Critique
+## phase 6: bounded design critique
 
 Dispatch a design agent — **once**, with tight scope — to spot-check the plan. The design agent is a critic, not a co-author.
 
@@ -223,7 +223,7 @@ It's still a plan, not an implementation. Don't over-engineer this pass — the 
 
 ---
 
-## Phase 7: Editorial Polish + Final Hand-off
+## phase 7: editorial polish + final hand-off
 
 The plan should be **shorter and clearer** after this pass than after Phase 4. Specific moves:
 
@@ -241,7 +241,7 @@ The plan should be **shorter and clearer** after this pass than after Phase 4. S
 - [ ] Open questions only if they would block or shape implementation
 - [ ] A reader unfamiliar with the area can pick it up and execute
 
-If the user picked **Hands-off**, surface the plan now and offer interactive refinement: *"Plan is at `<path>`. Want me to revise any section, expand scope, or trim anything?"* Treat each round as a focused edit pass on the file, not a re-plan.
+for **Hands-off**, report the plan path and ask: *"which section should i revise?"* treat each response as a focused edit.
 
 For **all** modes, report:
 
@@ -250,7 +250,7 @@ For **all** modes, report:
 - Any open questions that survived the polish pass
 - Suggested next workflow (`rp-build` for direct implementation, `rp-orchestrate` for multi-agent execution)
 
-### Housekeeping
+### housekeeping
 
 Sessions persist after agents finish — useful when you might revisit output, but they pile up over a multi-agent workflow. Once you've recorded what an agent produced, you can dismiss its session:
 
@@ -268,21 +268,21 @@ Plan and review exports generated during orchestration (via `export_response:tru
 
 ---
 
-## Anti-patterns
+## mistakes to avoid
 
-- 🚫 Skipping the involvement-level question — always ask first; the answer changes the run
-- 🚫 Asking generic or thin questions when in "Up front" / "Mid-flow" mode — questions must be informed by exploration findings or by the current draft's ambiguities
-- 🚫 More than 4 questions per checkpoint — interrogation isn't shaping
-- 🚫 Implementing code — this workflow ends at a plan
-- 🚫 Pasting full file contents into the plan — refer to `file:line`, don't reproduce
-- 🚫 Appending the `context_builder` export verbatim — merge architectural bones, leave the rambling
-- 🚫 Forgetting to delete the standalone `context_builder` export after merging
-- 🚫 Letting the design critique rewrite the plan — it's a critic, not a co-author
-- 🚫 Letting Phase 7 polish make the plan *longer* than after Phase 4 — it should be tighter
-- 🚫 Dispatching external/web research when the plan only depends on in-repo facts — the trigger is real external dependency
-- 🚫 Doing broad codebase reading yourself instead of dispatching an explore agent — keep your context lean for writing
-- 🚫 Forgetting to poll dispatched agents — they may block on permission approvals
-- 🚫 Silently demoting an Up-front / Mid-flow user to Hands-off when their checkpoint `ask_user` times out — they asked to be involved; honor it. Halt and resume when they reply. (Phase 1's involvement-mode prompt is the one exception: a timeout there is treated as "no signal" and falls through to the Hands-off default.)
+- Skipping the involvement-level question — always ask first; the answer changes the run
+- Asking generic or thin questions when in "Up front" / "Mid-flow" mode — questions must be informed by exploration findings or by the current draft's ambiguities
+- More than 4 questions per checkpoint — interrogation isn't shaping
+- Implementing code — this workflow ends at a plan
+- Pasting full file contents into the plan — refer to `file:line`, don't reproduce
+- Appending the `context_builder` export verbatim — merge architectural bones, leave the rambling
+- Forgetting to delete the standalone `context_builder` export after merging
+- Letting the design critique rewrite the plan — it's a critic, not a co-author
+- Letting Phase 7 polish make the plan *longer* than after Phase 4 — it should be tighter
+- Dispatching external/web research when the plan only depends on in-repo facts — the trigger is real external dependency
+- Doing broad codebase reading yourself instead of dispatching an explore agent — keep your context lean for writing
+- Forgetting to poll dispatched agents — they may block on permission approvals
+- Silently demoting an Up-front / Mid-flow user to Hands-off when their checkpoint `ask_user` times out — they asked to be involved; honor it. Halt and resume when they reply. (Phase 1's involvement-mode prompt is the one exception: a timeout there is treated as "no signal" and falls through to the Hands-off default.)
 
 ---
 

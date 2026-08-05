@@ -1,38 +1,38 @@
-# Design Doc Command
+# design doc command
 
-Format implementation plans as structured design documents for technical review and discussion.
+turn an implementation plan into a design document that supports a technical decision.
 
-## Usage
+## usage
 
 ```bash
 /design-doc                    # Start a new design doc
 /design-doc "feature name"     # Start with a specific feature
 ```
 
-## Workflow
+## workflow
 
-### 1. Gather Context
+### 1. gather context
 
-Ask the user:
+ask these questions:
 - What problem are you solving?
-- What's the current state/pain points?
+- what is difficult about the current state?
 - Any constraints or requirements?
 
 Research the codebase if needed to understand existing patterns.
 
-### 2. Generate Design Doc
+### 2. generate design doc
 
 Output the design doc using this exact structure:
 
 ---
 
-# {Project Name} Design Doc
+# {project name} design doc
 
-## Problem Context
+## problem context
 
 Brief description of the problem or opportunity. Overview of the domain and pain points. What is the current solution? What are its shortcomings?
 
-## Proposed Solution
+## proposed solution
 
 High-level summary of the proposed solution:
 - What it will do
@@ -40,20 +40,20 @@ High-level summary of the proposed solution:
 - What's different from current state
 - Key advantages
 
-## Goals and Non-Goals
+## goals and non-goals
 
-### Goals
+### goals
 
 - Goal 1: expected impact
 - Goal 2: expected impact
 - Goal 3: expected impact
 
-### Non-Goals
+### non-goals
 
 - Non-goal 1 (explain why out of scope)
 - Non-goal 2
 
-## Design
+## design
 
 Overall summary of the design and major components.
 
@@ -61,7 +61,7 @@ Overall summary of the design and major components.
 [Include diagram if helpful - ASCII or mermaid]
 ```
 
-### Key Components
+### key components
 
 Describe major request paths, data models, and architectural decisions.
 
@@ -69,48 +69,48 @@ Add subsections for each major component as needed:
 - Component A
 - Component B
 
-## Alternatives Considered
+## alternatives considered
 
 | Alternative | Pros | Cons | Why Not Chosen |
 |-------------|------|------|----------------|
 | Option A | ... | ... | ... |
 | Option B | ... | ... | ... |
 
-## Open Questions
+## open questions
 
 - [ ] Question 1
 - [ ] Question 2
 
-## Implementation Plan
+## implementation plan
 
-### Phase 1: Foundation
+### phase 1: foundation
 - Task 1
 - Task 2
 
-### Phase 2: Core Implementation
+### phase 2: core implementation
 - Task 3
 - Task 4
 
-### Phase 3: Polish & Testing
+### phase 3: polish & testing
 - Write tests
 - Documentation
 
-## Appendix
+## appendix
 
 Relevant links, detailed figures, or additional context.
 
 ---
 
-### 3. Iterate
+### 3. iterate
 
 After generating:
 - Ask if any sections need expansion
 - Clarify open questions
 - Refine based on feedback
 
-## Rules
+## rules
 
-- Keep language concise, sacrifice grammar for brevity
+- use short, complete sentences.
 - No fake case studies or made-up numbers
 - Include realistic implementation phases
 - Always include a testing phase
@@ -118,10 +118,10 @@ After generating:
 - Use tables for comparisons
 - Include code snippets or diagrams where helpful
 
-## Output Format
+## output format
 
 ```
-# {Project Name} Design Doc
+# {project name} design doc
 
 [Full document as specified above]
 
@@ -131,5 +131,5 @@ Open questions to discuss:
 1. ...
 2. ...
 
-Ready to refine any section or proceed to implementation?
+Choose the next action: revise a section or start implementation.
 ```

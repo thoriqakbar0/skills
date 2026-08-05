@@ -1,16 +1,16 @@
-# New Command
+# new command
 
-Create a command from conversation history or user description.
+create a reusable command from the conversation or request.
 
-## Steps
+## steps
 
 1. **Detect context**
    - If history exists: auto-capture workflow into command
-   - If no history: parse user's description
+   - if no history exists, use the request.
    - Use thread context clues to infer name, description, and usage
 
 2. Determine host (Codex, Claude, Cursor) from current runtime
-   - Say: "Since I am {host}, I will install it in {host}"
+   - report the selected host and installation path.
 
 3. Check existing commands for style (host-specific)
 ```bash
@@ -24,25 +24,25 @@ ls ~/.cursor/commands/
 
 5. Write command using concise format:
 ```markdown
-# Name
+# name
 
 One-line description.
 
-## Steps
+## steps
 1. Step with `bash command`
 2. Step with decisions
 
-## Usage
+## usage
 /{name} [args]
 ```
 
-6. Report created file and usage
+6. report the created file and exact invocation.
 
-## Flags
+## flags
 
 `--interview`: Ask detailed questions about purpose, triggers, inputs, outputs
 
-## Rules
+## rules
 
 - Default to capturing conversation if history exists
 - Default host to current runtime and install there
