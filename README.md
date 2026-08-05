@@ -44,16 +44,49 @@ Copy the full directory. A skill can use bundled agents, references, assets, or 
 
 Restart Codex after installation. Then invoke the skill by name, such as `$technical-documentation`.
 
-## Available skills
+## available skills
 
-| Skill | Use it to |
-| --- | --- |
-| [`coding-standards`](./coding-standards/) | Apply strict TypeScript design and test standards. |
-| [`orchestrate`](./orchestrate/) | Coordinate agents for large tasks that support parallel work. |
-| [`self-improve`](./self-improve/) | Review Codex sessions and propose evidence-based instruction improvements. |
-| [`technical-documentation`](./technical-documentation/) | Build and review documentation, contributor guidance, and agent instructions. |
+### [`coding-standards`](./coding-standards/)
 
-Each skill starts with a `SKILL.md` file. Read that file before installation to understand its behavior and requirements.
+use this skill for TypeScript implementation, design, review, and testing.
+
+the skill applies correctness rules across data boundaries, domain models, errors, modules, asynchronous work, and side effects. it requires precise types, explicit resource ownership, safe telemetry, and tests through real system boundaries.
+
+the skill treats every applicable rule as a proof obligation. it requires current verification or a clear report for each unverified claim.
+
+invoke it with `$coding-standards`.
+
+### [`orchestrate`](./orchestrate/)
+
+use this skill for substantial work that can benefit from multiple agents.
+
+the skill divides work into narrow assignments with separate ownership. it selects a suitable reasoning level for each agent and prevents overlapping work. the main agent combines the results and stays available to the user.
+
+the skill keeps approvals with the user. do not use it for a small task that one agent can complete directly.
+
+invoke it with `$orchestrate`.
+
+### [`self-improve`](./self-improve/)
+
+use this skill to improve Codex behavior from evidence in previous Codex sessions.
+
+the skill reads the local Codex session index and rollout files. it can list sessions, show a transcript, find repeated corrections, and audit installed skills. it separates proposals for skills, project `AGENTS.md`, and global `~/.codex/AGENTS.md` instructions.
+
+the skill only creates proposals by default. it cites the source sessions and does not edit instruction files without explicit approval. it requires the local Codex session system and is not portable to other agent runtimes without changes.
+
+invoke it with `$self-improve`.
+
+### [`technical-documentation`](./technical-documentation/)
+
+use this skill to build or review documentation for humans and agents.
+
+the skill inventories product documentation and governance files before it writes. it supports new evergreen documentation and updates to an existing documentation structure. it also checks `AGENTS.md`, `CONTRIBUTING.md`, aliases, links, commands, navigation, and multilingual parity when these items are in scope.
+
+the skill produces updated documentation, validation notes, coverage details, and remaining gaps. it uses the AGPL-3.0-only license.
+
+invoke it with `$technical-documentation`.
+
+each skill starts with a `SKILL.md` file. read that file before installation to understand its behavior and requirements.
 
 ## Install prompts
 
