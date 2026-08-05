@@ -1,4 +1,4 @@
-# codex skills
+# thoriq's codex skills
 
 [![skills.sh](https://skills.sh/b/thoriqakbar0/skills)](https://skills.sh/thoriqakbar0/skills)
 
