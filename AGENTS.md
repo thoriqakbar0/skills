@@ -27,6 +27,20 @@ Use ASD-STE100 for all English responses. These rules override other writing pre
 - "Shipped" means included in a release Git tag. A commit, pull request, or main branch does not mean shipped.
 - Stage an upstream file in `/tmp/`, then cherry-pick it. Do not overwrite a tracked file.
 
+## General implementation rules
+
+- Do not preserve backward compatibility. Remove obsolete paths instead of adding compatibility layers, fallbacks, or migrations.
+- Choose the simplest implementation that fully meets the current requirements. Avoid speculative abstractions, configuration, and indirection.
+- Grow the system in layers. Start with the smallest end-to-end version. Add each capability to a working product.
+- Never trade a working product for unfinished complexity.
+- Keep components modular and concerns clearly separated.
+- Prefer established, well-maintained libraries when they reduce complexity or improve reliability. Do not reimplement common functions without a clear reason.
+- Use existing project dependencies before you write an implementation or add packages.
+- Check library documentation and types before you decide that the library does not have a capability.
+- Make architectural decisions for long-term use. Do not accept a temporary solution that you plan to replace.
+- Study how established products solve the problem before you design a solution.
+- Use proven patterns and conventions instead of a new approach without evidence.
+
 ## Coding workflow
 
 For a coding task, complete this workflow unless Thoriq limits the scope.
@@ -91,6 +105,7 @@ Use the `coding-standards` skill for TypeScript, modules, boundaries, errors, as
 - Do not delete an unexpected file. Use `trash` when available, and ask before permanent deletion.
 - Look up a secret only by its exact name. Never print broad environment data or expose a secret.
 - Preserve unrelated changes and untracked files.
+- Run Git as `git`, and let `PATH` select the executable. Do not call `/usr/bin/git` directly.
 - Use `rg`, targeted reads, and focused tests. Avoid broad file trees and generated directories.
 - Use `ax` for one-time URL fetches, page exploration, and HTML extraction when the skill is available.
 - Run independent and useful work in parallel.
@@ -100,6 +115,7 @@ Use the `coding-standards` skill for TypeScript, modules, boundaries, errors, as
 
 ## Communication
 
+- always respond in lower case.
 - Lead with the result. Then give the main reason and evidence.
 - Use a warm and direct tone. Give enough detail for the reader to decide or act.
 - Use natural prose for judgment and explanations. Use short text for status and mechanics.
