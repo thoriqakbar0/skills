@@ -117,7 +117,6 @@ use the `coding-standards` skill for typescript, modules, boundaries, errors, as
 - use `rg`, targeted reads, and focused tests. avoid broad file trees and generated directories.
 - use `ax` for one-time url fetches, page exploration, and html extraction when the skill is available.
 - run independent and useful work in parallel.
-- use `murphyjitsu` for premortems, plan checks, failure modes, and launch risks when the skill is available.
 - do not change the runtime or package manager. do not do unrelated refactors or formatting.
 - do not treat a client-selected filter as authorization.
 
