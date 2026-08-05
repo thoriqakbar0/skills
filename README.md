@@ -132,6 +132,50 @@ the [`prompts` collection](./prompts/) provides ready-to-run workflows for GitHu
 
 use a prompt when you need a repeatable command without installing a complete skill.
 
+### GitHub and delivery prompts
+
+| prompt | use it for | result or limit |
+| --- | --- | --- |
+| [`gh-address-pr-comments`](./prompts/gh-address-pr-comments.md) | resolving selected PR review comments | applies focused changes and reports unresolved comments |
+| [`gh-commit`](./prompts/gh-commit.md) | dividing local changes into focused commits | avoids unrelated files and never stages the complete worktree |
+| [`gh-fix-ci`](./prompts/gh-fix-ci.md) | finding and fixing the first causal CI error | runs the smallest local check that covers the failure |
+| [`gh-review-pr`](./prompts/gh-review-pr.md) | reviewing a PR for correctness, tests, and material risk | separates required fixes, suggestions, and questions |
+| [`gh-ship`](./prompts/gh-ship.md) | committing selected files, pushing a branch, and creating a PR | stops on `main` or `master` and avoids `git add .` |
+
+### Building and testing prompts
+
+| prompt | use it for | result or limit |
+| --- | --- | --- |
+| [`box-task`](./prompts/box-task.md) | starting a Codex task in a new Ascii Box | returns the Box reference and status command; never falls back to local execution |
+| [`de-slop`](./prompts/de-slop.md) | finding AI artifacts and unrelated cleanup before a PR | shows findings first and changes only the selected items |
+| [`design-doc`](./prompts/design-doc.md) | turning an implementation idea into a reviewable design | produces goals, design, alternatives, open questions, and an implementation plan |
+| [`html-artifact`](./prompts/html-artifact.md) | building a self-contained interactive HTML artifact | saves one browser-tested file with accessible controls and clear information hierarchy |
+| [`make-tests`](./prompts/make-tests.md) | adding behavior tests for the current change | covers success, boundary, failure, and regression paths |
+| [`work-forever`](./prompts/work-forever.md) | continuing long work with few questions | states assumptions, monitors long commands, and keeps destructive actions blocked |
+
+### Authoring prompts
+
+| prompt | use it for | result or limit |
+| --- | --- | --- |
+| [`new-cmd`](./prompts/new-cmd.md) | turning a conversation or request into a reusable command | matches the active agent runtime and reports the exact invocation |
+| [`new-skill`](./prompts/new-skill.md) | turning a conversation or request into a reusable skill | creates only the files and scripts that the workflow needs |
+
+### RepoPrompt workflows
+
+these prompts require RepoPrompt MCP tools and an open RepoPrompt workspace.
+
+| prompt | use it for | result or limit |
+| --- | --- | --- |
+| [`rp-build`](./prompts/rp-build.md) | building a change from repository-grounded context | creates a plan with `context_builder`, then implements and verifies it |
+| [`rp-deep-plan`](./prompts/rp-deep-plan.md) | producing an executable plan for substantial work | writes one plan document and stops before implementation |
+| [`rp-investigate`](./prompts/rp-investigate.md) | tracing a defect or system question to evidence | produces a read-only investigation report with root-cause evidence |
+| [`rp-optimize`](./prompts/rp-optimize.md) | improving one measured performance result | measures a baseline, changes one variable per loop, and stops on stated criteria |
+| [`rp-oracle-export`](./prompts/rp-oracle-export.md) | exporting selected repository context for another model | creates a Question, Plan, or Review prompt under `prompt-exports/` |
+| [`rp-orchestrate`](./prompts/rp-orchestrate.md) | dividing substantial work across multiple agents | assigns clear ownership and verifies each result against one shared plan |
+| [`rp-refactor`](./prompts/rp-refactor.md) | reducing duplication and complexity without changing behavior | analyzes first, delegates ordered changes, and verifies every item |
+| [`rp-reminder`](./prompts/rp-reminder.md) | selecting the matching RepoPrompt tool during an active workflow | provides tool mappings for files, context, planning, and delegation |
+| [`rp-review`](./prompts/rp-review.md) | reviewing a confirmed git comparison with repository context | uses `context_builder` and reports concise, actionable findings |
+
 copy all prompts into Codex:
 
 ```sh
