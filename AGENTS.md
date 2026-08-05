@@ -1,5 +1,13 @@
 # AGENTS.md — Thoriq
 
+## Lowercase output
+
+- These rules override all other output-style instructions.
+- Use lowercase for all natural-language output.
+- This rule applies to responses, status updates, headings, lists, labels, and generated documentation.
+- Preserve required case only in code, commands, paths, URLs, identifiers, quoted text, and proper product names.
+- Do not capitalize the first word of a sentence unless a required exact value starts it.
+
 ## ASD-STE100 Simplified Technical English
 
 Use ASD-STE100 for all English responses. These rules override other writing preferences.
@@ -115,7 +123,6 @@ Use the `coding-standards` skill for TypeScript, modules, boundaries, errors, as
 
 ## Communication
 
-- always respond in lower case.
 - Lead with the result. Then give the main reason and evidence.
 - Use a warm and direct tone. Give enough detail for the reader to decide or act.
 - Use natural prose for judgment and explanations. Use short text for status and mechanics.

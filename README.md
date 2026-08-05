@@ -1,10 +1,16 @@
-# Codex Skills
+# Codex skills
 
-A focused collection of reusable Codex skills, prompt commands, and shared agent instructions maintained by Thoriq.
+Reusable skills, prompts, and agent instructions for OpenAI Codex.
 
-## Quick start
+Use this repository to add focused workflows to Codex. Each skill includes its instructions and supporting files.
 
-You need Git and `rsync`.
+## Requirements
+
+- Git
+- `rsync`
+- OpenAI Codex for Codex-specific skills and prompts
+
+## Install one skill
 
 Clone the repository:
 
@@ -13,36 +19,68 @@ git clone https://github.com/thoriqakbar0/skills.git
 cd skills
 ```
 
-Install a skill without replacing files that already exist:
+Copy the skill directory into your Codex skills directory:
 
 ```sh
 mkdir -p "$HOME/.codex/skills/technical-documentation"
-rsync -a --ignore-existing technical-documentation/ "$HOME/.codex/skills/technical-documentation/"
+rsync -a technical-documentation/ "$HOME/.codex/skills/technical-documentation/"
 ```
 
-Replace `technical-documentation` with the skill you want to install. Keep the entire directory together because a skill may depend on its bundled references, assets, or agent definitions.
+Replace `technical-documentation` with the skill name that you want.
+
+Copy the full directory. A skill can use bundled agents, references, assets, or scripts.
+
+Restart Codex after installation. Then invoke the skill by name, such as `$technical-documentation`.
 
 ## Available skills
 
-| Skill | Purpose |
+| Skill | Use it to |
 | --- | --- |
-| [`coding-standards`](./coding-standards/) | Apply correct-by-construction TypeScript engineering standards. |
-| [`orchestrate`](./orchestrate/) | Coordinate focused agents on substantial, parallelizable work. |
-| [`technical-documentation`](./technical-documentation/) | Build and review technical documentation, contributor guidance, and agent instruction files. |
+| [`coding-standards`](./coding-standards/) | Apply strict TypeScript design and test standards. |
+| [`orchestrate`](./orchestrate/) | Coordinate agents for large tasks that support parallel work. |
+| [`self-improve`](./self-improve/) | Review Codex sessions and propose evidence-based instruction improvements. |
+| [`technical-documentation`](./technical-documentation/) | Build and review documentation, contributor guidance, and agent instructions. |
 
-Each skill is defined by a `SKILL.md` file in its directory.
+Each skill starts with a `SKILL.md` file. Read that file before installation to understand its behavior and requirements.
 
-## Prompt commands
+## Install prompts
 
-The [`prompts`](./prompts/) directory contains reusable command-style prompts for GitHub workflows, testing, skill and command creation, interactive artifacts, autonomous work, and RepoPrompt workflows.
+The [`prompts`](./prompts/) directory contains reusable prompts for GitHub workflows, tests, design documents, skill creation, and autonomous work.
 
-Install prompts without replacing existing local commands:
+Copy all prompts into your Codex prompts directory:
 
 ```sh
 mkdir -p "$HOME/.codex/prompts"
-rsync -a --ignore-existing prompts/ "$HOME/.codex/prompts/"
+rsync -a prompts/ "$HOME/.codex/prompts/"
 ```
+
+This command replaces local prompt files that have the same names. Review the changes before you copy customized prompts.
+
+## Update an installation
+
+Pull the latest repository changes:
+
+```sh
+git pull --ff-only
+```
+
+Run the applicable `rsync` command again. The command updates matching files but does not remove obsolete local files.
 
 ## Agent instructions
 
-[`AGENTS.md`](./AGENTS.md) contains Thoriq's shared agent policy and response style. It is personalized and may conflict with project-specific instructions, so review and merge it instead of blindly replacing an existing file.
+[`AGENTS.md`](./AGENTS.md) contains Thoriq's shared agent policy and response style.
+
+This file is personal configuration. Review and merge its rules with your existing instructions. Do not replace project rules without review.
+
+## Repository structure
+
+```text
+.
+├── AGENTS.md                 shared agent instructions
+├── README.md                 repository guide
+├── coding-standards/         TypeScript engineering skill
+├── orchestrate/              multi-agent coordination skill
+├── prompts/                  reusable Codex prompts
+├── self-improve/             session review skill and script
+└── technical-documentation/  documentation skill and references
+```
