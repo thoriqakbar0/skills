@@ -2,19 +2,19 @@
 
 [![skills.sh](https://skills.sh/b/thoriqakbar0/skills)](https://skills.sh/thoriqakbar0/skills)
 
-make Codex more consistent at four jobs: building software, coordinating agents, learning from sessions, and writing documentation.
+reusable workflows for Codex that make engineering work more consistent, focused, and verifiable.
 
-install only what you need. each skill gives Codex a focused workflow, clear limits, and required checks.
+choose one skill for TypeScript engineering, agent coordination, session-based improvement, or technical documentation.
 
-## start in 30 seconds
+## install the skills
 
-install from [`skills.sh`](https://skills.sh/thoriqakbar0/skills):
+install from the [`skills.sh` package page](https://skills.sh/thoriqakbar0/skills):
 
 ```sh
 npx skills add thoriqakbar0/skills
 ```
 
-select the skills and agents that you want. restart your agent after installation.
+select the skills and agents that you need. restart the agent after installation.
 
 install one skill globally for Codex without prompts:
 
@@ -30,24 +30,24 @@ $coding-standards review this TypeScript change and fix the verified defects
 
 ## choose a skill
 
-| skill | choose it when you need |
+| skill | use it for |
 | --- | --- |
-| [`coding-standards`](#coding-standards) | TypeScript code with explicit boundaries, failures, ownership, and verification |
-| [`orchestrate`](#orchestrate) | multiple agents working on separate parts of one substantial task |
-| [`self-improve`](#self-improve) | evidence-backed improvements from your previous Codex sessions |
-| [`technical-documentation`](#technical-documentation) | documentation that people and agents can follow without hidden context |
+| [`coding-standards`](#coding-standards) | TypeScript design, implementation, review, and tests |
+| [`orchestrate`](#orchestrate) | substantial tasks with independent work for multiple agents |
+| [`self-improve`](#self-improve) | improvements supported by evidence from previous Codex sessions |
+| [`technical-documentation`](#technical-documentation) | documentation that people and agents can use without hidden context |
 
-## what makes these skills useful
+## what you get
 
-- **focused:** you install only the workflows that you need.
-- **evidence-based:** Codex must run checks that match the risk.
-- **bounded:** each skill states its limits and approval points.
-- **inspectable:** you can read every instruction, script, and reference.
-- **open:** each skill uses the standard `SKILL.md` format.
+- **one workflow per skill:** install only the behavior that you need.
+- **required evidence:** Codex must run checks that match the risk.
+- **clear boundaries:** each skill states its limits and approval points.
+- **plain-text instructions:** inspect every instruction, script, and reference.
+- **standard format:** each skill uses `SKILL.md`.
 
 ## coding-standards
 
-[`coding-standards`](./coding-standards/) makes TypeScript changes easier to trust and maintain.
+[`coding-standards`](./coding-standards/) applies strict engineering rules to TypeScript changes.
 
 use it for implementation, architecture, code review, refactoring, or test design. it checks the complete path from unknown input to observable behavior.
 
@@ -58,7 +58,7 @@ it guides Codex to:
 - model expected failures as typed values.
 - keep domain logic separate from adapters and runtime code.
 - give every side effect, promise, and resource a clear owner.
-- make retried mutations safe.
+- make repeated write operations safe.
 - prevent secrets from entering logs and errors.
 - test behavior through real system boundaries.
 - preserve strict TypeScript checks.
@@ -69,7 +69,7 @@ invoke it with `$coding-standards`.
 
 ## orchestrate
 
-[`orchestrate`](./orchestrate/) helps one Codex task coordinate multiple agents while you keep control.
+[`orchestrate`](./orchestrate/) divides substantial work across agents while you keep control.
 
 use it when a task has independent research, implementation, or review work. skip it when one agent can complete the task directly.
 
@@ -86,9 +86,9 @@ invoke it with `$orchestrate`.
 
 ## self-improve
 
-[`self-improve`](./self-improve/) finds durable improvements in previous Codex sessions.
+[`self-improve`](./self-improve/) turns repeated corrections into evidence-backed instruction improvements.
 
-use it when repeated corrections or workflow problems should become better skills or instructions.
+use it when the same correction or workflow problem appears across multiple sessions.
 
 it can:
 
@@ -107,7 +107,7 @@ invoke it with `$self-improve`.
 
 ## technical-documentation
 
-[`technical-documentation`](./technical-documentation/) builds documentation that is accurate, actionable, and maintainable.
+[`technical-documentation`](./technical-documentation/) builds documentation that readers can follow and maintain.
 
 use it for readmes, product documentation, contributor guides, agent instructions, or a full documentation review.
 
@@ -128,7 +128,9 @@ invoke it with `$technical-documentation`.
 
 ## reusable prompts
 
-the [`prompts`](./prompts/) directory contains prompts for GitHub work, tests, design documents, refactoring, and autonomous tasks.
+the [`prompts` collection](./prompts/) provides ready-to-run workflows for GitHub work, tests, planning, refactoring, and long tasks.
+
+use a prompt when you need a repeatable command without installing a complete skill.
 
 copy all prompts into Codex:
 
@@ -181,4 +183,4 @@ treat this file as personal configuration. review and merge its rules with your 
 └── technical-documentation/  documentation skill and references
 ```
 
-review every skill before use. installed skills can direct an agent to run tools with your permissions.
+review each skill before use. a skill can direct an agent to run tools with your permissions.
