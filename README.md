@@ -1,5 +1,7 @@
 # Codex skills
 
+[![skills.sh](https://skills.sh/b/thoriqakbar0/skills)](https://skills.sh/thoriqakbar0/skills)
+
 Reusable skills, prompts, and agent instructions for OpenAI Codex.
 
 Use this repository to add focused workflows to Codex. Each skill includes its instructions and supporting files.
@@ -11,6 +13,16 @@ Use this repository to add focused workflows to Codex. Each skill includes its i
 - OpenAI Codex for Codex-specific skills and prompts
 
 ## Install one skill
+
+use the skills CLI:
+
+```sh
+npx skills add thoriqakbar0/skills
+```
+
+select one or more skills when the CLI prompts you.
+
+you can also install a skill manually.
 
 Clone the repository:
 
