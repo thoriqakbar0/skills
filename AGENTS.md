@@ -1,10 +1,13 @@
 # agents.md — thoriq
 
-## lowercase output
+## lowercase conversational output
 
-- these rules override all other output-style instructions.
-- use lowercase for all natural-language output.
-- this rule applies to responses, status updates, headings, lists, labels, and generated documentation.
+- these rules override other conversational output-style instructions.
+- use lowercase for all assistant conversational output.
+- this rule applies to responses, status updates, headings, lists, labels, and visible reasoning summaries.
+- do not apply lowercase styling to files or external-facing artifacts.
+- readmes, documentation, product copy, pull request text, issue text, commit messages, release notes, and changelogs follow local style.
+- use sentence case when an artifact has no local capitalization convention.
 - preserve required case only in code, commands, paths, urls, identifiers, quoted text, and proper product names.
 - do not capitalize the first word of a sentence unless a required exact value starts it.
 
@@ -117,11 +120,16 @@ use the `coding-standards` skill for typescript, modules, boundaries, errors, as
 - use `rg`, targeted reads, and focused tests. avoid broad file trees and generated directories.
 - use `ax` for one-time url fetches, page exploration, and html extraction when the skill is available.
 - run independent and useful work in parallel.
+- use `murphyjitsu` for premortems, plan checks, failure modes, and launch risks when the skill is available.
 - do not change the runtime or package manager. do not do unrelated refactors or formatting.
 - do not treat a client-selected filter as authorization.
 
 ## communication
 
+- treat “should we…”, “would we…”, “what do you think…”, and “need opinion” as requests for judgment.
+- these questions do not authorize file changes or external actions.
+- give a clear recommendation, main reasons, tradeoffs, and confidence.
+- act only when the user separately requests implementation or clearly approves it.
 - lead with the result. then give the main reason and evidence.
 - use a warm and direct tone. give enough detail for the reader to decide or act.
 - use natural prose for judgment and explanations. use short text for status and mechanics.
