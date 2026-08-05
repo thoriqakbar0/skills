@@ -1,123 +1,174 @@
-# Codex skills
+# codex skills
 
 [![skills.sh](https://skills.sh/b/thoriqakbar0/skills)](https://skills.sh/thoriqakbar0/skills)
 
-Reusable skills, prompts, and agent instructions for OpenAI Codex.
+make Codex more consistent at four jobs: building software, coordinating agents, learning from sessions, and writing documentation.
 
-Use this repository to add focused workflows to Codex. Each skill includes its instructions and supporting files.
+install only what you need. each skill gives Codex a focused workflow, clear limits, and required checks.
 
-## Requirements
+## start in 30 seconds
 
-- Git
-- `rsync`
-- OpenAI Codex for Codex-specific skills and prompts
-
-## Install one skill
-
-use the skills CLI:
+install from [`skills.sh`](https://skills.sh/thoriqakbar0/skills):
 
 ```sh
 npx skills add thoriqakbar0/skills
 ```
 
-select one or more skills when the CLI prompts you.
+select the skills and agents that you want. restart your agent after installation.
 
-you can also install a skill manually.
-
-Clone the repository:
+install one skill globally for Codex without prompts:
 
 ```sh
-git clone https://github.com/thoriqakbar0/skills.git
-cd skills
+npx skills add thoriqakbar0/skills --skill coding-standards --agent codex --global --yes
 ```
 
-Copy the skill directory into your Codex skills directory:
+invoke an installed skill by name:
 
-```sh
-mkdir -p "$HOME/.codex/skills/technical-documentation"
-rsync -a technical-documentation/ "$HOME/.codex/skills/technical-documentation/"
+```text
+$coding-standards review this TypeScript change and fix the verified defects
 ```
 
-Replace `technical-documentation` with the skill name that you want.
+## choose a skill
 
-Copy the full directory. A skill can use bundled agents, references, assets, or scripts.
+| skill | choose it when you need |
+| --- | --- |
+| [`coding-standards`](#coding-standards) | TypeScript code with explicit boundaries, failures, ownership, and verification |
+| [`orchestrate`](#orchestrate) | multiple agents working on separate parts of one substantial task |
+| [`self-improve`](#self-improve) | evidence-backed improvements from your previous Codex sessions |
+| [`technical-documentation`](#technical-documentation) | documentation that people and agents can follow without hidden context |
 
-Restart Codex after installation. Then invoke the skill by name, such as `$technical-documentation`.
+## what makes these skills useful
 
-## available skills
+- **focused:** you install only the workflows that you need.
+- **evidence-based:** Codex must run checks that match the risk.
+- **bounded:** each skill states its limits and approval points.
+- **inspectable:** you can read every instruction, script, and reference.
+- **open:** each skill uses the standard `SKILL.md` format.
 
-### [`coding-standards`](./coding-standards/)
+## coding-standards
 
-use this skill for TypeScript implementation, design, review, and testing.
+[`coding-standards`](./coding-standards/) makes TypeScript changes easier to trust and maintain.
 
-the skill applies correctness rules across data boundaries, domain models, errors, modules, asynchronous work, and side effects. it requires precise types, explicit resource ownership, safe telemetry, and tests through real system boundaries.
+use it for implementation, architecture, code review, refactoring, or test design. it checks the complete path from unknown input to observable behavior.
 
-the skill treats every applicable rule as a proof obligation. it requires current verification or a clear report for each unverified claim.
+it guides Codex to:
+
+- parse external data at system boundaries.
+- make invalid states difficult to represent.
+- model expected failures as typed values.
+- keep domain logic separate from adapters and runtime code.
+- give every side effect, promise, and resource a clear owner.
+- make retried mutations safe.
+- prevent secrets from entering logs and errors.
+- test behavior through real system boundaries.
+- preserve strict TypeScript checks.
+
+Codex must provide current evidence for each applicable rule. it must report any result that it cannot verify.
 
 invoke it with `$coding-standards`.
 
-### [`orchestrate`](./orchestrate/)
+## orchestrate
 
-use this skill for substantial work that can benefit from multiple agents.
+[`orchestrate`](./orchestrate/) helps one Codex task coordinate multiple agents while you keep control.
 
-the skill divides work into narrow assignments with separate ownership. it selects a suitable reasoning level for each agent and prevents overlapping work. the main agent combines the results and stays available to the user.
+use it when a task has independent research, implementation, or review work. skip it when one agent can complete the task directly.
 
-the skill keeps approvals with the user. do not use it for a small task that one agent can complete directly.
+it guides Codex to:
+
+- divide work into narrow assignments.
+- prevent agents from editing the same scope.
+- select a suitable reasoning level for each assignment.
+- keep the main agent available to you.
+- combine agent results into one verified outcome.
+- keep approvals and important decisions with you.
 
 invoke it with `$orchestrate`.
 
-### [`self-improve`](./self-improve/)
+## self-improve
 
-use this skill to improve Codex behavior from evidence in previous Codex sessions.
+[`self-improve`](./self-improve/) finds durable improvements in previous Codex sessions.
 
-the skill reads the local Codex session index and rollout files. it can list sessions, show a transcript, find repeated corrections, and audit installed skills. it separates proposals for skills, project `AGENTS.md`, and global `~/.codex/AGENTS.md` instructions.
+use it when repeated corrections or workflow problems should become better skills or instructions.
 
-the skill only creates proposals by default. it cites the source sessions and does not edit instruction files without explicit approval. it requires the local Codex session system and is not portable to other agent runtimes without changes.
+it can:
+
+- list local Codex sessions.
+- render a session as a readable transcript.
+- find repeated corrections across sessions.
+- audit installed skills for missing guidance.
+- separate proposals for skills, project instructions, and global instructions.
+- cite the sessions that support each proposal.
+
+the skill proposes changes first. it does not edit instruction files without your explicit approval.
+
+this skill requires the local Codex session database and rollout files. it does not work unchanged in other agent systems.
 
 invoke it with `$self-improve`.
 
-### [`technical-documentation`](./technical-documentation/)
+## technical-documentation
 
-use this skill to build or review documentation for humans and agents.
+[`technical-documentation`](./technical-documentation/) builds documentation that is accurate, actionable, and maintainable.
 
-the skill inventories product documentation and governance files before it writes. it supports new evergreen documentation and updates to an existing documentation structure. it also checks `AGENTS.md`, `CONTRIBUTING.md`, aliases, links, commands, navigation, and multilingual parity when these items are in scope.
+use it for readmes, product documentation, contributor guides, agent instructions, or a full documentation review.
 
-the skill produces updated documentation, validation notes, coverage details, and remaining gaps. it uses the AGPL-3.0-only license.
+it guides Codex to:
+
+- inventory documentation before writing.
+- define the audience and reader outcome.
+- preserve the current structure in an existing project.
+- prefer durable wording for evergreen documentation.
+- check commands, links, navigation, and referenced files.
+- align `AGENTS.md`, `CONTRIBUTING.md`, and compatible instruction files.
+- check multilingual parity when multiple languages exist.
+- report validation results and remaining gaps.
+
+this skill uses the `AGPL-3.0-only` license. see its [`SKILL.md`](./technical-documentation/SKILL.md) for source metadata.
 
 invoke it with `$technical-documentation`.
 
-each skill starts with a `SKILL.md` file. read that file before installation to understand its behavior and requirements.
+## reusable prompts
 
-## Install prompts
+the [`prompts`](./prompts/) directory contains prompts for GitHub work, tests, design documents, refactoring, and autonomous tasks.
 
-The [`prompts`](./prompts/) directory contains reusable prompts for GitHub workflows, tests, design documents, skill creation, and autonomous work.
-
-Copy all prompts into your Codex prompts directory:
+copy all prompts into Codex:
 
 ```sh
 mkdir -p "$HOME/.codex/prompts"
 rsync -a prompts/ "$HOME/.codex/prompts/"
 ```
 
-This command replaces local prompt files that have the same names. Review the changes before you copy customized prompts.
+this command replaces prompt files with matching names. review local changes before you copy customized prompts.
 
-## Update an installation
+## manual installation
 
-Pull the latest repository changes:
+use manual installation when you do not want the skills CLI.
+
+```sh
+git clone https://github.com/thoriqakbar0/skills.git
+cd skills
+mkdir -p "$HOME/.codex/skills/technical-documentation"
+rsync -a technical-documentation/ "$HOME/.codex/skills/technical-documentation/"
+```
+
+replace `technical-documentation` with the skill name that you want. copy the complete directory because a skill can use bundled resources.
+
+## update a manual installation
+
+pull the current repository version:
 
 ```sh
 git pull --ff-only
 ```
 
-Run the applicable `rsync` command again. The command updates matching files but does not remove obsolete local files.
+run the applicable `rsync` command again. this updates matching files but does not remove obsolete files.
 
-## Agent instructions
+## shared agent instructions
 
 [`AGENTS.md`](./AGENTS.md) contains Thoriq's shared agent policy and response style.
 
-This file is personal configuration. Review and merge its rules with your existing instructions. Do not replace project rules without review.
+treat this file as personal configuration. review and merge its rules with your project instructions.
 
-## Repository structure
+## repository map
 
 ```text
 .
@@ -129,3 +180,5 @@ This file is personal configuration. Review and merge its rules with your existi
 ├── self-improve/             session review skill and script
 └── technical-documentation/  documentation skill and references
 ```
+
+review every skill before use. installed skills can direct an agent to run tools with your permissions.
