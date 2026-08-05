@@ -50,7 +50,7 @@ Then retry the `working_dirs` bind.
 
 ### 1a. scout the territory with explore agents
 
-Before calling `context_builder`, dispatch explore agents to map the areas the user wants refactored. A quick `get_file_tree` or `file_search` orients you, then spawn 2–3 explore agents for the most relevant areas:
+before calling `context_builder`, dispatch explore agents to map the requested areas. use `get_file_tree` or `file_search` only for orientation.
 
 ```json
 // Quick orientation
@@ -155,7 +155,7 @@ For each item, note:
 
 Most tasks decompose into **2-3 items** — that's the sweet spot. If you're reaching for 4-5, consider whether some items can be combined. If you're beyond 5, you're decomposing too finely — raise the abstraction level.
 
-If the task naturally decomposes into **1 item**, skip the orchestration overhead — just dispatch it directly. Don't create ceremony for simple work.
+if the task has one work item, dispatch it directly.
 
 ### sequential steering loop
 
@@ -251,7 +251,7 @@ Then pass `session_ids` (array) to `agent_run op=wait` to block until the **firs
 
 Handle the finished agent, then wait again on the remaining `pending_session_ids`. While waiting, summarize completed work or prepare the next brief — be a pipeline, not a sequential loop.
 
-Only parallelize when items have **zero file overlap**. When in doubt, run sequentially — refactoring conflicts are painful to untangle.
+parallelize only items with no file overlap. otherwise run them in order.
 
 ### housekeeping
 
@@ -295,7 +295,7 @@ after all items finish, report:
 - Skipping Step 0 (Workspace Verification) – you must confirm the target codebase is loaded first
 - Skipping Step 1's `context_builder` call with `response_type: "review"` and attempting to analyze manually
 - Skipping Step 2's `context_builder` call with `response_type: "plan"` — you need a concrete plan before dispatching agents
-- Extended reading before the first `context_builder` call – a quick skim is fine; let the builder do the heavy lifting
+- reading full files before the first `context_builder` call.
 - Implementing refactorings yourself — you are the coordinator; dispatch agents to do the work
 - Dispatching all items at once without verifying each one — refactorings compound; verify before proceeding
 - Parallelizing items that share files — sequential is safer for dependent refactorings

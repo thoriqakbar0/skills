@@ -20,7 +20,7 @@ sub-agents implement changes, run benchmarks, and inspect code. you coordinate t
 - **Explore agents** (`agent_run` with `model_id:"explore"`): Read-only sub-agents that map the surface — find AGENTS.md, locate hot paths, discover existing benchmarks, define scope boundaries. Cheap and parallel; spawn liberally during Phase 1.
 - **`context_builder`**: Used in **plan mode** during Phase 2 to design the metric, instrumentation strategy, and first-pass optimization candidates in one shot. Reused in the loop to plan each individual optimization.
 - **Pair agents** (`agent_run` with `model_id:"pair"`): Carry out implementation, measurement, and hardening. Phase 3's pair lands instrumentation and the baseline. Each loop iteration's pair lands one attributed change, runs tests, re-measures, and appends to the scoreboard.
-- **Oracle** (`oracle_send`): Reasons over the scoreboard and changed files at decision points — "did this iteration earn its keep?" and "should we keep going?". Selection-aware; you curate before each call.
+- **oracle** (`oracle_send`): compares the scoreboard with the stop conditions and recommends the next action.
 
 ### core principles
 
@@ -109,7 +109,7 @@ Use `detach:true` so they run concurrently:
 
 > **Detached agents may block on permission approvals.** Poll periodically or use `op=wait` so you can approve and keep them unblocked.
 
-If the bottleneck-candidates explore returns thin or generic results ("nothing obviously expensive"), that's a signal — either the area is genuinely well-tuned and the user's complaint is elsewhere, or the explore needed broader radius. Either way, **re-dispatch one targeted explore** with a wider radius (e.g., "look two call levels up") rather than reading the code yourself.
+if the bottleneck report lacks specific evidence, dispatch one wider probe. ask it to inspect two additional call levels.
 
 ### 1c. synthesize the target
 

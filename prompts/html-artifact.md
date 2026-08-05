@@ -16,7 +16,7 @@ create a complete interactive HTML artifact from the request.
    - `/Users/thor/.codex/skills/executive-communication/SKILL.md` first, to turn the source into an answer-first information hierarchy with material evidence, implications, uncertainty, and an explicit decision or action.
    - `/Users/thor/.agents/skills/apple-design/SKILL.md` for direct manipulation, immediate feedback, interruptible motion, spatial consistency, materials, accessibility, and restraint.
    - `/Users/thor/.agents/skills/better-typography/SKILL.md` for the type scale, measure, hierarchy, wrapping, numeric stability, contrast, and text details. Read only the linked topic references needed for this artifact.
-   - `/Users/thor/.agents/skills/animation-vocabulary/SKILL.md` only when the user describes motion vaguely or asks what an effect is called. Use its exact vocabulary; do not treat it as a motion-design guide.
+   - `/Users/thor/.agents/skills/animation-vocabulary/SKILL.md` only when the request uses vague motion terms or asks for an effect name.
 
 3. Design the information before designing the interface:
    - Identify the audience and the artifact's job: decision, input, awareness, exploration, explanation, or action.
@@ -32,9 +32,9 @@ create a complete interactive HTML artifact from the request.
    - Progressive disclosure is for secondary detail, methodology, and provenance—not the answer.
    - Visual prominence follows decision importance, not what is easiest to animate.
 
-5. Use Apple design principles to express that information clearly. Design around one clear purpose and one obvious primary interaction. Keep controls close to what they affect, preserve user agency, maintain wayfinding, and make every state understandable without instructions.
+5. Use Apple design principles to express the information. keep one purpose, one primary interaction, direct control, and clear navigation.
 
-6. Build a single HTML file with embedded CSS and JavaScript unless the user or existing project requires another structure. Avoid dependencies unless they materially improve the requested interaction. Use semantic HTML, keyboard-accessible controls, visible focus states, and responsive layout.
+6. Build one HTML file with embedded CSS and JavaScript unless the request or project requires another structure.
 
 7. Make the artifact genuinely interactive:
    - Feedback begins on pointer-down and stays continuous during direct manipulation.

@@ -68,7 +68,7 @@ Then use targeted searches to understand how the task maps to the codebase:
 
 rewrite the request with specific modules, patterns, and repository terms.
 
-Your goal is orientation, not deep understanding — `context_builder` does the heavy lifting.
+learn enough to name the relevant area. let `context_builder` perform the deep scan.
 
 ---
 
@@ -186,7 +186,7 @@ Implement the plan directly with the editing tools; use `oracle_send` only for r
 - Skipping `context_builder` and going straight to implementation – you'll miss context
 - Using `manage_selection` with `op:"clear"` – this undoes `context_builder`'s work; only use small targeted additions if absolutely necessary
 - Exceeding ~160k tokens – use slices if needed
-- Extended reading before calling `context_builder` – a quick skim is fine; let the builder do the heavy lifting
+- reading full files before `context_builder`; keep the first scan brief.
 - Reading full file contents during Phase 1 – save that for after `context_builder` builds context
 - skipping `context_builder` because the quick scan looks sufficient.
 

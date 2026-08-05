@@ -23,7 +23,7 @@ Use the extracted task (not the raw request) for all downstream steps — intent
 
 - select **Question**, **Plan**, or **Review** from the request. ask only when the scope remains unclear.
 - For vague requests, use repo evidence before asking questions.
-- Use the fast path only when the scope is already small, concrete, and obviously file-local.
+- use the fast path only when the scope is small, concrete, and limited to named files.
 - For broad **Question/Plan** exports, `context_builder` is the default path.
 - For review exports, `context_builder` is the default path.
 - Do **not** spend exploratory tool calls proving that a broad request is complex enough for `context_builder`.
@@ -76,7 +76,7 @@ Good question shapes:
 
 ### 2. choose context path
 
-Because this prompt does not expose the workflow export budget directly, prefer `context_builder` unless the review scope is obviously tiny.
+this prompt does not expose the export budget. use `context_builder` unless the review scope is small and fully named.
 
 #### review
 
@@ -110,7 +110,7 @@ Determine the comparison scope from the request and git state.
 **If you need to ask, STOP and wait for user confirmation before proceeding.**
 
 This prompt does not expose the workflow export-mode budget directly. Lean on `context_builder` unless the uncommitted review scope is clearly tiny, obviously bounded, and safe to include in full.
-For `Review`, the fast path is the **exception**, not the default. It is allowed only when the confirmed scope is **uncommitted changes** and the **full changed-file review scope** is obviously tiny and safe to include in full. Otherwise require `context_builder`.
+for `Review`, use the fast path only for a small, confirmed set of uncommitted files. otherwise use `context_builder`.
 For `Review`, this is the default path. If the review is not a tiny uncommitted-change export that is obviously safe to include in full, `context_builder` is required.
 For review exports, explicitly reference the diff / changed files in the context you build.
 

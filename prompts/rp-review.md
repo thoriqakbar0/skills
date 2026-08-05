@@ -121,7 +121,7 @@ Not yet reviewed: <list files/areas to review now>.</context>
 
 ## mistakes to avoid
 
-- Proceeding with an ambiguous scope – if the user didn't specify a comparison target and it's unclear from context, you must ask before calling `context_builder`
+- proceeding without a confirmed comparison target when repository evidence cannot resolve it.
 - Skipping `context_builder` and attempting to review by reading files manually – you'll miss architectural context
 - Calling `context_builder` without specifying the confirmed comparison scope in the instructions
 - Doing extensive file reading before calling `context_builder` – git status/log/diff is sufficient for Step 1

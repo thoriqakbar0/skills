@@ -125,7 +125,7 @@ For each item, note:
 
 Most tasks decompose into **2-3 items** — that's the sweet spot. If you're reaching for 4-5, consider whether some items can be combined. If you're beyond 5, you're decomposing too finely — raise the abstraction level.
 
-If the task naturally decomposes into **1 item**, skip the orchestration overhead — just dispatch it directly. Don't create ceremony for simple work.
+if the task has one work item, dispatch it directly.
 
 ---
 
@@ -210,7 +210,7 @@ When steering, the loop is the same but step 5 becomes `agent_run op=steer` on t
 
 Stick to these role labels. The specific model behind a role isn't your concern unless the user names one.
 
-When in doubt, use `pair`. The tasks reaching this workflow are complex by nature. Use `engineer` when the plan already makes the path obvious and the item just needs execution.
+use `pair` when the work needs design decisions. use `engineer` when the plan defines the implementation path.
 
 When questions arise during coordination, reason through them yourself. If you're uncertain, negotiate with the agent already working on the relevant task — it has the deepest context. Steer it with your thinking and work toward consensus rather than dictating a direction.
 
@@ -321,7 +321,7 @@ after all items finish, report:
 - **You are the coordinator, not the implementer.** Read to verify sub-agent work, not to build your own mental model. Keep your context focused on coordination.
 - **Trust the agents.** They're smart, they have tools, they read project instructions. Give them goals and reference points, not turn-by-turn directions.
 - **Be strategic about parallelism.** Independent items can run concurrently, but always warn agents about siblings working in adjacent areas.
-- **Graceful scaling.** 1 item = just dispatch it. 2-3 items = straightforward. 4-5 items = be deliberate about dependencies and parallelism.
+- **scale by scope.** dispatch one item directly. for two to five items, state dependencies and file ownership.
 - **Escalation point.** You're the one with the full picture. Sub-agents should surface coordination problems to you rather than solving them unilaterally.
 
 ## mistakes to avoid

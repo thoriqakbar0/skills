@@ -191,7 +191,7 @@ The tool returns `oracle_export_path`. **Merge, don't append.**
 {"tool":"file_actions","args":{"action":"delete","path":"<oracle_export_path>"}}
 ```
 
-The merge is where you start asserting voice. `context_builder` rambles; the plan won't.
+rewrite the selected architecture in one consistent voice.
 
 ---
 
@@ -275,7 +275,7 @@ Plan and review exports generated during orchestration (via `export_response:tru
 - More than 4 questions per checkpoint — interrogation isn't shaping
 - Implementing code — this workflow ends at a plan
 - Pasting full file contents into the plan — refer to `file:line`, don't reproduce
-- Appending the `context_builder` export verbatim — merge architectural bones, leave the rambling
+- appending the `context_builder` export instead of rewriting its useful decisions.
 - Forgetting to delete the standalone `context_builder` export after merging
 - Letting the design critique rewrite the plan — it's a critic, not a co-author
 - Letting Phase 7 polish make the plan *longer* than after Phase 4 — it should be tighter
