@@ -1,10 +1,17 @@
-# thoriq's codex skills
+# thoriq's codex skills and prompts
 
 [![skills.sh](https://skills.sh/b/thoriqakbar0/skills)](https://skills.sh/thoriqakbar0/skills)
 
-reusable workflows for Codex that make engineering work more consistent, focused, and verifiable.
+four reusable skills and 13 ready-to-run prompts for Codex.
 
-choose one skill for TypeScript engineering, agent coordination, session-based improvement, or technical documentation.
+use a skill for repeatable behavior across tasks. use a prompt for one focused workflow.
+
+## choose the right format
+
+| format | use it when | invoke it with |
+| --- | --- | --- |
+| skill | you need repeatable behavior across tasks | `$skill-name` |
+| prompt | you need one focused workflow | `/prompts:prompt-name` |
 
 ## install the skills
 
@@ -134,47 +141,31 @@ use a prompt when you need a repeatable command without installing a complete sk
 
 ### GitHub and delivery prompts
 
-| prompt | use it for | result or limit |
+| prompt | use it to | what it does |
 | --- | --- | --- |
-| [`gh-address-pr-comments`](./prompts/gh-address-pr-comments.md) | resolving selected PR review comments | applies focused changes and reports unresolved comments |
-| [`gh-commit`](./prompts/gh-commit.md) | dividing local changes into focused commits | avoids unrelated files and never stages the complete worktree |
-| [`gh-fix-ci`](./prompts/gh-fix-ci.md) | finding and fixing the first causal CI error | runs the smallest local check that covers the failure |
-| [`gh-review-pr`](./prompts/gh-review-pr.md) | reviewing a PR for correctness, tests, and material risk | separates required fixes, suggestions, and questions |
-| [`gh-ship`](./prompts/gh-ship.md) | committing selected files, pushing a branch, and creating a PR | stops on `main` or `master` and avoids `git add .` |
+| [`gh-address-pr-comments`](./prompts/gh-address-pr-comments.md) | resolve selected PR review comments | applies focused changes and reports unresolved comments |
+| [`gh-commit`](./prompts/gh-commit.md) | divide local changes into focused commits | avoids unrelated files and never stages the complete worktree |
+| [`gh-fix-ci`](./prompts/gh-fix-ci.md) | find and fix the first causal CI error | runs the smallest local check that covers the failure |
+| [`gh-review-pr`](./prompts/gh-review-pr.md) | review a PR for correctness, tests, and material risk | separates required fixes, suggestions, and questions |
+| [`gh-ship`](./prompts/gh-ship.md) | commit selected files, push a branch, and create a PR | stops on `main` or `master` and avoids `git add .` |
 
 ### Building and testing prompts
 
-| prompt | use it for | result or limit |
+| prompt | use it to | what it does |
 | --- | --- | --- |
-| [`box-task`](./prompts/box-task.md) | starting a Codex task in a new Ascii Box | returns the Box reference and status command; never falls back to local execution |
-| [`de-slop`](./prompts/de-slop.md) | finding AI artifacts and unrelated cleanup before a PR | shows findings first and changes only the selected items |
-| [`design-doc`](./prompts/design-doc.md) | turning an implementation idea into a reviewable design | produces goals, design, alternatives, open questions, and an implementation plan |
-| [`html-artifact`](./prompts/html-artifact.md) | building a self-contained interactive HTML artifact | saves one browser-tested file with accessible controls and clear information hierarchy |
-| [`make-tests`](./prompts/make-tests.md) | adding behavior tests for the current change | covers success, boundary, failure, and regression paths |
-| [`work-forever`](./prompts/work-forever.md) | continuing long work with few questions | states assumptions, monitors long commands, and keeps destructive actions blocked |
+| [`box-task`](./prompts/box-task.md) | start a Codex task in a new Ascii Box | returns the Box reference and status command; never falls back to local execution |
+| [`de-slop`](./prompts/de-slop.md) | find AI artifacts and unrelated cleanup before a PR | shows findings first and changes only the selected items |
+| [`design-doc`](./prompts/design-doc.md) | turn an implementation idea into a reviewable design | produces goals, design, alternatives, open questions, and an implementation plan |
+| [`html-artifact`](./prompts/html-artifact.md) | build a self-contained interactive HTML artifact | saves one browser-tested file with accessible controls and clear information hierarchy |
+| [`make-tests`](./prompts/make-tests.md) | add behavior tests for the current change | covers success, boundary, failure, and regression paths |
+| [`work-forever`](./prompts/work-forever.md) | continue long work with few questions | states assumptions, monitors long commands, and keeps destructive actions blocked |
 
 ### Authoring prompts
 
-| prompt | use it for | result or limit |
+| prompt | use it to | what it does |
 | --- | --- | --- |
-| [`new-cmd`](./prompts/new-cmd.md) | turning a conversation or request into a reusable command | matches the active agent runtime and reports the exact invocation |
-| [`new-skill`](./prompts/new-skill.md) | turning a conversation or request into a reusable skill | creates only the files and scripts that the workflow needs |
-
-### RepoPrompt workflows
-
-these prompts require RepoPrompt MCP tools and an open RepoPrompt workspace.
-
-| prompt | use it for | result or limit |
-| --- | --- | --- |
-| [`rp-build`](./prompts/rp-build.md) | building a change from repository-grounded context | creates a plan with `context_builder`, then implements and verifies it |
-| [`rp-deep-plan`](./prompts/rp-deep-plan.md) | producing an executable plan for substantial work | writes one plan document and stops before implementation |
-| [`rp-investigate`](./prompts/rp-investigate.md) | tracing a defect or system question to evidence | produces a read-only investigation report with root-cause evidence |
-| [`rp-optimize`](./prompts/rp-optimize.md) | improving one measured performance result | measures a baseline, changes one variable per loop, and stops on stated criteria |
-| [`rp-oracle-export`](./prompts/rp-oracle-export.md) | exporting selected repository context for another model | creates a Question, Plan, or Review prompt under `prompt-exports/` |
-| [`rp-orchestrate`](./prompts/rp-orchestrate.md) | dividing substantial work across multiple agents | assigns clear ownership and verifies each result against one shared plan |
-| [`rp-refactor`](./prompts/rp-refactor.md) | reducing duplication and complexity without changing behavior | analyzes first, delegates ordered changes, and verifies every item |
-| [`rp-reminder`](./prompts/rp-reminder.md) | selecting the matching RepoPrompt tool during an active workflow | provides tool mappings for files, context, planning, and delegation |
-| [`rp-review`](./prompts/rp-review.md) | reviewing a confirmed git comparison with repository context | uses `context_builder` and reports concise, actionable findings |
+| [`new-cmd`](./prompts/new-cmd.md) | turn a conversation or request into a reusable command | matches the active agent runtime and reports the exact invocation |
+| [`new-skill`](./prompts/new-skill.md) | turn a conversation or request into a reusable skill | creates only the files and scripts that the workflow needs |
 
 copy all prompts into Codex:
 
@@ -184,6 +175,12 @@ rsync -a prompts/ "$HOME/.codex/prompts/"
 ```
 
 this command replaces prompt files with matching names. review local changes before you copy customized prompts.
+
+invoke a copied prompt by name:
+
+```text
+/prompts:gh-review-pr 123
+```
 
 ## manual installation
 
