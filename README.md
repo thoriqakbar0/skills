@@ -153,12 +153,14 @@ use a prompt when you need a repeatable command without installing a complete sk
 
 | prompt | use it to | what it does |
 | --- | --- | --- |
-| [`box-task`](./prompts/box-task.md) | start a Codex task in a new Ascii Box | returns the Box reference and status command; never falls back to local execution |
+| [`box-task`](./prompts/box-task.md) | send an improved execution brief to Codex in a new or named Ascii Box | preserves intent, adds acceptance checks, and records Playwright evidence for browser work |
 | [`de-slop`](./prompts/de-slop.md) | find AI artifacts and unrelated cleanup before a PR | shows findings first and changes only the selected items |
 | [`design-doc`](./prompts/design-doc.md) | turn an implementation idea into a reviewable design | produces goals, design, alternatives, open questions, and an implementation plan |
 | [`html-artifact`](./prompts/html-artifact.md) | build a self-contained interactive HTML artifact | saves one browser-tested file with accessible controls and clear information hierarchy |
 | [`make-tests`](./prompts/make-tests.md) | add behavior tests for the current change | covers success, boundary, failure, and regression paths |
 | [`work-forever`](./prompts/work-forever.md) | continue long work with few questions | states assumptions, monitors long commands, and keeps destructive actions blocked |
+
+`box-task` keeps the original request, then adds scope, assumptions, acceptance checks, and an evidence contract. Browser tasks record Playwright traces, videos, screenshots, logs, and a downloadable artifact manifest.
 
 ### Authoring prompts
 
