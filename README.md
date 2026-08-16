@@ -2,7 +2,7 @@
 
 [![skills.sh](https://skills.sh/b/thoriqakbar0/skills)](https://skills.sh/thoriqakbar0/skills)
 
-four reusable skills and 13 ready-to-run prompts for Codex.
+four reusable skills and 14 ready-to-run prompts for Codex.
 
 use a skill for repeatable behavior across tasks. use a prompt for one focused workflow.
 
@@ -154,6 +154,7 @@ use a prompt when you need a repeatable command without installing a complete sk
 | prompt | use it to | what it does |
 | --- | --- | --- |
 | [`box-task`](./prompts/box-task.md) | send an improved execution brief to Codex in a new or named Ascii Box | preserves intent, adds acceptance checks, and records Playwright evidence for browser work |
+| [`codebase-audit`](./prompts/codebase-audit.md) | audit a complete codebase for useful simplifications | inventories every subsystem, validates findings, and leaves the repository unchanged |
 | [`de-slop`](./prompts/de-slop.md) | find AI artifacts and unrelated cleanup before a PR | shows findings first and changes only the selected items |
 | [`design-doc`](./prompts/design-doc.md) | turn an implementation idea into a reviewable design | produces goals, design, alternatives, open questions, and an implementation plan |
 | [`html-artifact`](./prompts/html-artifact.md) | build a self-contained interactive HTML artifact | saves one browser-tested file with accessible controls and clear information hierarchy |
