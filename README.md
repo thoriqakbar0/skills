@@ -2,7 +2,7 @@
 
 [![skills.sh](https://skills.sh/b/thoriqakbar0/skills)](https://skills.sh/thoriqakbar0/skills)
 
-four reusable skills and 14 ready-to-run prompts for Codex.
+five reusable skills and 14 ready-to-run prompts for Codex.
 
 use a skill for repeatable behavior across tasks. use a prompt for one focused workflow.
 
@@ -43,6 +43,7 @@ $coding-standards review this TypeScript change and fix the verified defects
 | [`orchestrate`](#orchestrate) | substantial tasks with independent work for multiple agents |
 | [`self-improve`](#self-improve) | improvements supported by evidence from previous Codex sessions |
 | [`technical-documentation`](#technical-documentation) | documentation that people and agents can use without hidden context |
+| [`write-discoverable-code`](#write-discoverable-code) | code names and messages that plain-text search can find |
 
 ## what you get
 
@@ -132,6 +133,23 @@ it guides Codex to:
 this skill uses the `AGPL-3.0-only` license. see its [`SKILL.md`](./technical-documentation/SKILL.md) for source metadata.
 
 invoke it with `$technical-documentation`.
+
+## write-discoverable-code
+
+[`write-discoverable-code`](./write-discoverable-code/) makes code easier for coding agents and humans to find with plain-text search.
+
+use it when writing or renaming functions, types, constants, files, error messages, or documentation comments.
+
+it guides Codex to:
+
+- use domain-specific names that produce unique search results.
+- keep one spelling and one definition for each concept.
+- put important constraints beside exported definitions.
+- preserve complete event names, flags, and error prefixes as searchable literals.
+- keep each file focused on one searchable concept.
+- colocate tests with the behavior that they specify.
+
+invoke it with `$write-discoverable-code`.
 
 ## reusable prompts
 
