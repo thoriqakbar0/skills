@@ -138,6 +138,8 @@ invoke it with `$technical-documentation`.
 
 [`write-discoverable-code`](./write-discoverable-code/) makes code easier for coding agents and humans to find with plain-text search.
 
+read the source article: [How coding agents read your code](https://modem.dev/blog/how-coding-agents-read-your-code).
+
 use it when writing or renaming functions, types, constants, files, error messages, or documentation comments.
 
 it guides Codex to:
