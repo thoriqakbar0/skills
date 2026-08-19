@@ -2,7 +2,7 @@
 
 [![skills.sh](https://skills.sh/b/thoriqakbar0/skills)](https://skills.sh/thoriqakbar0/skills)
 
-five reusable skills and 14 ready-to-run prompts for Codex.
+six reusable skills and 14 ready-to-run prompts for Codex.
 
 use a skill for repeatable behavior across tasks. use a prompt for one focused workflow.
 
@@ -43,6 +43,7 @@ $coding-standards review this TypeScript change and fix the verified defects
 | [`orchestrate`](#orchestrate) | substantial tasks with independent work for multiple agents |
 | [`self-improve`](#self-improve) | improvements supported by evidence from previous Codex sessions |
 | [`technical-documentation`](#technical-documentation) | documentation that people and agents can use without hidden context |
+| [`unslop`](#unslop) | remove AI writing patterns while preserving meaning and voice |
 | [`write-discoverable-code`](#write-discoverable-code) | code names and messages that plain-text search can find |
 
 ## what you get
@@ -133,6 +134,16 @@ it guides Codex to:
 this skill uses the `AGPL-3.0-only` license. see its [`SKILL.md`](./technical-documentation/SKILL.md) for source metadata.
 
 invoke it with `$technical-documentation`.
+
+## unslop
+
+[`unslop`](./unslop/) removes common AI writing patterns without flattening the writer's voice.
+
+use it for conversational output, documentation, articles, product copy, and other prose. it cuts puffery, vague claims, filler, repetitive structures, and awkward punctuation while preserving meaning and intended tone.
+
+source: [pstack by Lauren Tan](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop), published under the MIT license.
+
+invoke it with `$unslop`.
 
 ## write-discoverable-code
 
