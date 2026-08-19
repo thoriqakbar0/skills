@@ -1,0 +1,27 @@
+{
+  "name": "poteto-mode",
+  "version": "0.1.0",
+  "description": "Rigorous Codex workflows for investigation, fixes, features, refactoring, handoffs, and plain writing.",
+  "author": {
+    "name": "Thoriq Akbar",
+    "url": "https://github.com/thoriqakbar0"
+  },
+  "homepage": "https://github.com/cursor/plugins/tree/main/pstack",
+  "repository": "https://github.com/cursor/plugins",
+  "license": "MIT",
+  "keywords": ["workflow", "verification", "engineering", "writing"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Poteto Mode",
+    "shortDescription": "Run focused engineering workflows with evidence.",
+    "longDescription": "A Codex-native adaptation of pstack's Poteto Mode. It routes investigations, bug fixes, features, refactors, session pickup, and safe pauses through focused playbooks.",
+    "developerName": "Thoriq Akbar",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": [
+      "$poteto-mode investigate this behavior and cite the evidence.",
+      "$poteto-mode reproduce this bug, fix its cause, and verify it.",
+      "$poteto-mode resume this task without repeating completed work."
+    ]
+  }
+}

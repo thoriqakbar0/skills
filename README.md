@@ -2,7 +2,7 @@
 
 [![skills.sh](https://skills.sh/b/thoriqakbar0/skills)](https://skills.sh/thoriqakbar0/skills)
 
-six reusable skills and 14 ready-to-run prompts for Codex.
+six reusable skills, one Codex plugin, and 14 ready-to-run prompts.
 
 use a skill for repeatable behavior across tasks. use a prompt for one focused workflow.
 
@@ -144,6 +144,19 @@ use it for conversational output, documentation, articles, product copy, and oth
 source: [pstack by Lauren Tan](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop), published under the MIT license.
 
 invoke it with `$unslop`.
+
+## Codex plugin
+
+The `poteto-mode` plugin routes non-trivial work through focused playbooks for investigation, bug fixes, features, refactoring, session pickup, and safe pauses. It also bundles `unslop`.
+
+Add this repository as a Codex marketplace:
+
+```sh
+codex plugin marketplace add thoriqakbar0/skills
+codex plugin add poteto-mode@thoriq-skills
+```
+
+Start a new task after installation, then invoke `$poteto-mode`.
 
 ## write-discoverable-code
 
