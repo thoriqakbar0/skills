@@ -147,7 +147,7 @@ invoke it with `$unslop`.
 
 ## Codex plugin
 
-The `poteto-mode` plugin routes non-trivial work through focused playbooks for investigation, bug fixes, features, refactoring, session pickup, and safe pauses. It also bundles `unslop`.
+The `poteto-mode` plugin contains the complete pstack 0.14 Codex port from [`HustleCoding/pstack-codex`](https://github.com/HustleCoding/pstack-codex). It includes 44 skills, 23 playbooks, 21 engineering principles, model routing, bounded collaboration, and real-artifact verification.
 
 Add this repository as a Codex marketplace:
 
@@ -156,7 +156,7 @@ codex plugin marketplace add thoriqakbar0/skills
 codex plugin add poteto-mode@thoriq-skills
 ```
 
-Start a new task after installation, then invoke `$poteto-mode`.
+Start a new task after installation, then invoke `$poteto-mode`. Run `$setup-pstack` once to write the recommended Codex model and runtime policy.
 
 ## write-discoverable-code
 
