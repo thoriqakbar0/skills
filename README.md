@@ -2,7 +2,7 @@
 
 [![skills.sh](https://skills.sh/b/thoriqakbar0/skills)](https://skills.sh/thoriqakbar0/skills)
 
-six reusable skills, one Codex plugin, and 14 ready-to-run prompts.
+seven reusable skills, one Codex plugin, and 14 ready-to-run prompts.
 
 use a skill for repeatable behavior across tasks. use a prompt for one focused workflow.
 
@@ -41,6 +41,7 @@ $coding-standards review this TypeScript change and fix the verified defects
 | --- | --- |
 | [`coding-standards`](#coding-standards) | TypeScript design, implementation, review, and tests |
 | [`orchestrate`](#orchestrate) | substantial tasks with independent work for multiple agents |
+| [`pbt`](#pbt) | property-based testing that targets and proves plausible defects |
 | [`self-improve`](#self-improve) | improvements supported by evidence from previous Codex sessions |
 | [`technical-documentation`](#technical-documentation) | documentation that people and agents can use without hidden context |
 | [`unslop`](#unslop) | remove AI writing patterns while preserving meaning and voice |
@@ -92,6 +93,24 @@ it guides Codex to:
 - keep approvals and important decisions with you.
 
 invoke it with `$orchestrate`.
+
+## pbt
+
+[`pbt`](./pbt/) builds property-based tests around likely defects and independent checks.
+
+use it to design, implement, clean, migrate, refactor, or debug generated tests.
+
+it guides Codex to:
+
+- research risky behavior before proposing a property.
+- show the test argument and wait for approval before editing.
+- route Python to Hypothesis, supported languages to Hegel, browsers to Bombadil, and system faults to Antithesis.
+- generate structured inputs that reach distinct states.
+- prove each claimed defect with a regression or disposable mutation.
+- clean related tests and make small testability refactors.
+- preserve minimized failures and improve the generator around each bug family.
+
+invoke it with `$pbt`.
 
 ## self-improve
 
@@ -266,6 +285,7 @@ treat this file as personal configuration. review and merge its rules with your 
 ├── README.md                 repository guide
 ├── coding-standards/         TypeScript engineering skill
 ├── orchestrate/              multi-agent coordination skill
+├── pbt/                      property-based testing skill
 ├── prompts/                  reusable Codex prompts
 ├── self-improve/             session review skill and script
 └── technical-documentation/  documentation skill and references
