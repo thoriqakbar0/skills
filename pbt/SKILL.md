@@ -18,6 +18,8 @@ Use the project's test runner and package manager.
 
 Load installed tool-specific skills when available. Otherwise inspect current package documentation and types.
 
+After choosing a tool, read [references/api-references.md](references/api-references.md) for its exact API sources.
+
 For a Hegel-supported language, migrate related PBTs to Hegel when practical. Preserve a test when migration loses a guarantee.
 
 Treat missing features, build failures, and unreliable execution as concrete blockers. Record the exact blocker.
