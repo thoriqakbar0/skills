@@ -2,7 +2,7 @@
 
 [![skills.sh](https://skills.sh/b/thoriqakbar0/skills)](https://skills.sh/thoriqakbar0/skills)
 
-seven reusable skills, one Codex plugin, and 14 ready-to-run prompts.
+eight reusable skills, one Codex plugin, and 14 ready-to-run prompts.
 
 use a skill for repeatable behavior across tasks. use a prompt for one focused workflow.
 
@@ -40,6 +40,7 @@ $coding-standards review this TypeScript change and fix the verified defects
 | skill | use it for |
 | --- | --- |
 | [`coding-standards`](#coding-standards) | TypeScript design, implementation, review, and tests |
+| [`open-sourcing`](#open-sourcing) | public-release preparation, licensing, secrets hygiene, CI, and packaging |
 | [`orchestrate`](#orchestrate) | substantial tasks with independent work for multiple agents |
 | [`pbt`](#pbt) | property-based testing that targets and proves plausible defects |
 | [`self-improve`](#self-improve) | improvements supported by evidence from previous Codex sessions |
@@ -76,6 +77,22 @@ it guides Codex to:
 Codex must provide current evidence for each applicable rule. it must report any result that it cannot verify.
 
 invoke it with `$coding-standards`.
+
+## open-sourcing
+
+[`open-sourcing`](./open-sourcing/) prepares a private or existing public repository for a formal open-source release.
+
+use it to:
+
+- audit the complete Git history and related GitHub content for secrets.
+- choose and apply a license consistently.
+- close documentation, contributor, CI, and repository-setting gaps.
+- set up versioning, release automation, and language-specific packaging.
+- verify the repository from a new contributor's perspective before publication.
+
+source: [Trail of Bits' `open-sourcing` skill](https://github.com/trailofbits/skills/tree/main/plugins/open-sourcing/skills/open-sourcing), licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). see [`NOTICE.md`](./open-sourcing/NOTICE.md) for attribution and modification details.
+
+invoke it with `$open-sourcing`.
 
 ## orchestrate
 
@@ -284,11 +301,14 @@ treat this file as personal configuration. review and merge its rules with your 
 ├── AGENTS.md                 shared agent instructions
 ├── README.md                 repository guide
 ├── coding-standards/         TypeScript engineering skill
+├── open-sourcing/            public-release readiness skill and references
 ├── orchestrate/              multi-agent coordination skill
 ├── pbt/                      property-based testing skill
 ├── prompts/                  reusable Codex prompts
 ├── self-improve/             session review skill and script
-└── technical-documentation/  documentation skill and references
+├── technical-documentation/  documentation skill and references
+├── unslop/                   prose editing skill
+└── write-discoverable-code/  code discoverability skill
 ```
 
 review each skill before use. a skill can direct an agent to run tools with your permissions.
