@@ -34,9 +34,3 @@ For each risk, write the likely mistake and an input where competing implementat
 Prefer witnesses with distinct values, uneven lengths, boundaries on both sides, and non-commuting operations. Symmetric inputs hide ordering defects.
 
 Group risks that share a mechanism. Rank them by impact, likelihood, current coverage, reachability, and checker independence.
-
-## Whole-system research
-
-Use `antithesis-research` for timing, concurrency, partial failures, recovery, and distributed coordination.
-
-Keep its discovery and evaluation stages separate. Discovery looks for properties. Evaluation looks for gaps, bias, duplication, and infeasible checks.
