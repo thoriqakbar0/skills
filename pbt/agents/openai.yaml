@@ -1,0 +1,4 @@
+interface:
+  display_name: "Property-based testing"
+  short_description: "Build generated tests that catch plausible defects"
+  default_prompt: "Use $pbt to find risky behavior, propose strong properties, and prove each test catches a plausible defect."
