@@ -2,7 +2,7 @@
 
 [![skills.sh](https://skills.sh/b/thoriqakbar0/skills)](https://skills.sh/thoriqakbar0/skills)
 
-eight reusable skills, one Codex plugin, and 14 ready-to-run prompts.
+nine reusable skills, one Codex plugin, and 14 ready-to-run prompts.
 
 use a skill for repeatable behavior across tasks. use a prompt for one focused workflow.
 
@@ -46,6 +46,7 @@ $coding-standards review this TypeScript change and fix the verified defects
 | [`self-improve`](#self-improve) | improvements supported by evidence from previous Codex sessions |
 | [`technical-documentation`](#technical-documentation) | documentation that people and agents can use without hidden context |
 | [`unslop`](#unslop) | remove AI writing patterns while preserving meaning and voice |
+| [`visual-pr`](#visual-pr) | concise pull request descriptions with visual outlines for reviewers |
 | [`write-discoverable-code`](#write-discoverable-code) | code names and messages that plain-text search can find |
 
 ## what you get
@@ -180,6 +181,16 @@ use it for conversational output, documentation, articles, product copy, and oth
 source: [pstack by Lauren Tan](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop), published under the MIT license.
 
 invoke it with `$unslop`.
+
+## visual-pr
+
+[`visual-pr`](./visual-pr/) creates or updates a pull request with a concise visual outline that helps reviewers understand why the change exists and how it is shaped.
+
+use it for pull requests that need a compact view of changed data structures, file responsibilities, component trees, control flow, or data flow.
+
+invoke it with `$visual-pr`.
+
+source: [HumanLayer's `visual-pr` skill](https://github.com/humanlayer/skills/tree/4e39d8fe020f17e5810b450e2646a7c4a7aa7a74/plugins/visual-pr/skills/visual-pr), licensed under the [MIT License](./visual-pr/LICENSE). see [`NOTICE.md`](./visual-pr/NOTICE.md) for attribution and modification details.
 
 ## Codex plugin
 
