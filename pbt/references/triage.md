@@ -2,6 +2,8 @@
 
 Use this reference when a property fails.
 
+Use [techniques/triage.md](../techniques/triage.md) for the failure ledger and the evidence standard for findings.
+
 ## Capture the failure
 
 Record the framework version, command, seed, replay token, minimized input, reached state, and environment.

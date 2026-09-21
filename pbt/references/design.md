@@ -2,6 +2,8 @@
 
 Use this reference after the test argument is approved.
 
+Use [techniques/directions.md](../techniques/directions.md) when defining the oracle and [techniques/generators.md](../techniques/generators.md) when choosing the input domain.
+
 ## Choose a strong property
 
 Prefer properties in this order when the contract supports them:

@@ -24,6 +24,17 @@ For a Hegel-supported language, migrate related PBTs to Hegel when practical. Pr
 
 Treat missing features, build failures, and unreliable execution as concrete blockers. Record the exact blocker.
 
+## Techniques
+
+Load the focused guide that matches the current stage:
+
+- [techniques/surfaces.md](techniques/surfaces.md) before choosing the API area to test.
+- [techniques/directions.md](techniques/directions.md) before writing the property oracle.
+- [techniques/generators.md](techniques/generators.md) before designing input strategies.
+- [techniques/running.md](techniques/running.md) before setting case counts or time limits.
+- [techniques/scale.md](techniques/scale.md) when size or complexity can hide defects.
+- [techniques/triage.md](techniques/triage.md) when a property fails.
+
 ## Research before coding
 
 Read [references/research.md](references/research.md). Find risky behavior before proposing a property.

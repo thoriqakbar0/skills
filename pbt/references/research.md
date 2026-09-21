@@ -2,6 +2,8 @@
 
 Use this reference before proposing properties.
 
+Use [techniques/surfaces.md](../techniques/surfaces.md) to enumerate the public API and [techniques/scale.md](../techniques/scale.md) when size or complexity may hide a defect.
+
 ## Bounded local scan
 
 Trace the target behavior through its callers and observable outputs. Then make focused passes for applicable risks:
