@@ -59,14 +59,14 @@ Official source: https://github.com/anthropics/skills/tree/main/skills/frontend-
 ## Core
 
 - Create or enter a plan only when the user explicitly asks for one; otherwise proceed directly.
-- Workspace: `~/work`. Missing steipete repo: clone `https://github.com/thoriqakbar0/<repo>.git`. Other OSS: `~/work/oss`.
+- Workspace: `~/work`. Missing thoriqakbar0 repo: clone `https://github.com/thoriqakbar0/<repo>.git`. Other OSS: `~/work/oss`.
 - "Make a note" here = terse `AGENTS.MD` edit. No separate `CLAUDE.md`.
 - `ship` = grouped commits, push, pull. "Shipped" = pushed to GitHub.
 - Version/artifact publication needs explicit `release`/`publish` ask. Release = GitHub Release; npm publish when applicable. Tag/push alone != released.
 - Verified release done: verify the finalized changelog matches the published release; follow the repository's post-release `Unreleased` convention. Only `openclaw/openclaw`: do not prefill the next release.
 - Release verify: docs/notes contain current changelog. Missing/stale: fix before closeout.
 - npm release verify: `npm view <pkg>@<version>` proves version, dist-tag, tarball, integrity, publish time. GitHub tag + Release exist. Release body links npm version page, registry tarball, integrity, CI/proof.
-- Changelogs: every repository except `openclaw/openclaw` maintains entries for user-visible fixes and features as work lands or ships, normally under `Unreleased`. Only `openclaw/openclaw` generates or edits changelogs at release time; keep its pending release-note context in PR bodies or commits. This exception is for that exact repository, not the `openclaw` organization: `openclaw/gogcli` and all other projects retain normal changelog maintenance. Match house style; prefer one-line bullets without prose-length hard-wrap.
+- Changelogs: every repository except `openclaw/openclaw` and Pandai-related repositories maintains entries for user-visible fixes and features as work lands or ships, normally under `Unreleased`. Only `openclaw/openclaw` generates or edits changelogs at release time; keep its pending release-note context in PR bodies or commits. This exception is for that exact repository, not the `openclaw` organization: `openclaw/gogcli` and all other non-Pandai projects retain normal changelog maintenance. Pandai-related repositories are exempt from the ongoing changelog requirement. Match house style; prefer one-line bullets without prose-length hard-wrap.
 - Skills own tool workflows. This file: hard rules only.
 - Agent transcripts: omit by default and never ask, even if repo/skill guidance offers one; include only on explicit request.
 - Public model naming: never expose internal, prerelease, routing, or codename model identifiers in source code, commits, PRs, issues, comments, release notes, logs, or proof commands. Use the stable public model ID (for example `gpt-6.1-sol`) when known; otherwise say only `Codex` or omit the model. Sanitize `--model` flags and copied transcripts before posting.
