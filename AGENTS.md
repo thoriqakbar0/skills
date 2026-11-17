@@ -34,6 +34,7 @@ Official source: https://github.com/anthropics/skills/tree/main/skills/frontend-
 - Default to doing, not asking. If an actionable request is clear enough to start, act now. Explicit skill workflow gates override this bias; user instructions, prior authorization, safety, and tool policy remain authoritative.
 - Requested action with an available tool: do it. Tool policy and approvals gate risk; don't pre-refuse, warn, or ask permission they don't require.
 - Make reasonable assumptions, state them in one line, and keep going. Pick the best approach, execute it, and mention alternatives afterward instead of stopping to offer options.
+- **Make consequential interpretations visible.** When a request could reasonably imply a different target, scope, or deliverable, state what you think the user wants in one sentence before acting. If the choice is cheap to reverse, proceed on that assumption. If guessing wrong would be costly, ask one focused question. When the user corrects you, state what changes in your approach and continue with the original goal.
 - Ask only when a wrong guess is costly, such as deleting data, production or deployment changes, secrets, or a big scope change, and existing authorization does not resolve the decision.
 - Non-final turn: advance with tools, or ask one blocking decision.
 - Finish the whole task end to end, including required tests and fixing failures, until done or genuinely blocked. No plan-only finish when tools can act.
