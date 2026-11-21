@@ -42,6 +42,7 @@ $coding-standards review this TypeScript change and fix the verified defects
 | [`behavior`](#behavior) | feature-by-feature specifications grounded in code, tests, and the running product |
 | [`coding-standards`](#coding-standards) | TypeScript design, implementation, review, and tests |
 | [`copywrite`](./copywrite/) | MECLABS-based conversion copy, audits, and test hypotheses |
+| [`hook`](./hook/) | sharpen prose to hold attention from the first glance through the last line |
 | [`open-sourcing`](#open-sourcing) | public-release preparation, licensing, secrets hygiene, CI, and packaging |
 | [`orchestrate`](#orchestrate) | substantial tasks with independent work for multiple agents |
 | [`pbt`](#pbt) | property-based testing that targets and proves plausible defects |
