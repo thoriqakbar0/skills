@@ -2,7 +2,7 @@
 
 [![skills.sh](https://skills.sh/b/thoriqakbar0/skills)](https://skills.sh/thoriqakbar0/skills)
 
-nine reusable skills, one Codex plugin, and 14 ready-to-run prompts.
+ten reusable skills, one Codex plugin, and 14 ready-to-run prompts.
 
 use a skill for repeatable behavior across tasks. use a prompt for one focused workflow.
 
@@ -39,6 +39,7 @@ $coding-standards review this TypeScript change and fix the verified defects
 
 | skill | use it for |
 | --- | --- |
+| [`behavior`](#behavior) | feature-by-feature specifications grounded in code, tests, and the running product |
 | [`coding-standards`](#coding-standards) | TypeScript design, implementation, review, and tests |
 | [`open-sourcing`](#open-sourcing) | public-release preparation, licensing, secrets hygiene, CI, and packaging |
 | [`orchestrate`](#orchestrate) | substantial tasks with independent work for multiple agents |
@@ -56,6 +57,12 @@ $coding-standards review this TypeScript change and fix the verified defects
 - **clear boundaries:** each skill states its limits and approval points.
 - **plain-text instructions:** inspect every instruction, script, and reference.
 - **standard format:** each skill uses `SKILL.md`.
+
+## behavior
+
+[`behavior`](./behavior/) describes what users can do, feature by feature. It drafts specifications from code and tests, verifies them against the running product, and records suspected defects for triage.
+
+Invoke it with `$behavior`.
 
 ## coding-standards
 
