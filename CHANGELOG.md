@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added `/hook` to sharpen prose for sustained reader attention. Thanks @thoriqakbar0.
+
 - Added the `copywrite` skill for drafting, auditing, and testing conversion copy with MECLABS principles. Thanks @thoriqakbar0.
 
 - Removed the Box task prompt.
