@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added the `copywrite` skill for drafting, auditing, and testing conversion copy with MECLABS principles. Thanks @thoriqakbar0.
+
 - Removed the Box task prompt.
 
 - Added the `behavior` skill for writing and verifying feature-by-feature product specifications.
