@@ -201,7 +201,7 @@ source: [HumanLayer's `visual-pr` skill](https://github.com/humanlayer/skills/tr
 
 ## Codex plugin
 
-The `poteto-mode` plugin contains the complete pstack 0.14 Codex port from [`HustleCoding/pstack-codex`](https://github.com/HustleCoding/pstack-codex). It includes 44 skills, 23 playbooks, 21 engineering principles, model routing, bounded collaboration, and real-artifact verification.
+The [`poteto-mode` plugin](./plugins/poteto-mode) packages Cursor pstack 0.15.46 through the pstack-claude Codex port at 0.9.146.
 
 Add this repository as a Codex marketplace:
 

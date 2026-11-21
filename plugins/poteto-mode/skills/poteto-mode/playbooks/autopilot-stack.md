@@ -1,13 +1,8 @@
 ### Autopilot-stack
 
-**Build and verify one linear stack. Never land it.** Use when the user wants a reviewable PR chain and withholds merge authority.
+Run the Autopilot-full playbook, but do not merge.
 
-1. Spawn one Codex collaboration agent per bounded change. Give each writer an isolated worktree, exact scope, acceptance checks, and the current pstack standing orders.
-2. Owners build, self-verify, apply **unslop** and **no-comments**, address review findings, and report the exact head SHA. Keep disjoint work parallel.
-3. Hold one topology writer. Use the repository's existing stacking tool when available. Otherwise create ordinary GitHub PRs whose base branches form one explicit chain. Never force-push a shared branch without user approval.
-4. Swarm-verify every proposed stack head. Re-run gates, exercise the real behavior, and audit the diff and receipts. Findings return to the owner. A changed patch requires a fresh verdict.
-5. Append only clean, verified PRs. No owner merges, arms auto-merge, or closes a PR.
-6. When trunk or a parent changes, restack through the single topology writer. Compare `git patch-id` and re-verify every changed patch.
-7. Deliver the chain bottom-up with one verdict per PR. The user reviews and lands it.
+1. **In place of step 5, stop at verified.** Stop when each PR is verified and green at its current head, then hand the PRs to the operator. After the handoff, nobody pushes without the operator's go. Every loop tick prompt names this file, so each tick sees the no-merge rule.
+2. **Stack a PR only when it builds on another PR.** This is the one exception to step 3. Base the PR on the other PR's branch in place of trunk, per `playbooks/opening-a-pr.md`. In place of step 2's rebase onto trunk, each PR rebases onto its parent PR's branch, and the stack root rebases onto trunk. A new head on the lower PR restacks the PRs above it, and a PR whose `git patch-id` the restack leaves unchanged keeps its verdict. Before any restack, follow [Merge and restack safety](../references/merge-safety.md): capture the affected chain and its remote heads, cancel auto-merge requests and queue membership for that chain, verify the cancellation, and push with `--force-with-lease=refs/heads/<branch>:<captured-remote-head>`. Record each verdict's head SHA, base SHA, base branch, and patch-id, and send a PR whose verdict may not apply to its new base back through verification.
 
-**Reply:** the root and tip links, parent relationship, head SHA, verdict for each PR, and parked work.
+**Reply:** list each PR with its verdict, in place of what is merge-ready for the operator's click.

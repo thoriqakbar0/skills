@@ -1,72 +1,20 @@
-# pstack for Codex
+# Poteto Mode for Codex
 
-This repository ports [pstack](https://github.com/cursor/plugins/tree/main/pstack) from Cursor to Codex.
+This marketplace plugin packages Cursor pstack 0.15.46 through Michael Denyer’s
+[pstack-claude Codex port](https://github.com/michael-denyer/pstack-claude/tree/97d2ba2790822939ee43db0d7856219ea96c450d)
+(0.9.146). The marketplace version tracks Cursor pstack. The two source
+commits are recorded in `UPSTREAM_COMMIT` and `CODEX_PORT_COMMIT`.
 
-The engineering principles and playbooks remain pstack's. The runtime integration is native Codex:
-
-- Codex collaboration agents instead of Cursor `Task` and `poteto-agent`
-- verified Codex model and reasoning routes when the collaboration tool exposes them, with session-runtime inheritance as the fallback
-- Codex memory and task history instead of Cursor transcript paths
-- Codex browser, computer-use, GitHub, and automation tools
-- `.codex/skills` for global and project-local skills
-
-The port currently contains 44 skills, including `poteto-mode`, its playbooks, `swarm`, the workflow skills, and 21 engineering principles. The 0.14 port adds `bro`, `no-comments`, `technical-writing`, Babysit, Shipping, Autopilot-full, Autopilot-stack, Orchestrate, and safe worktree cleanup.
-
-## Install
-
-```bash
-git clone https://github.com/HustleCoding/pstack-codex.git
-cd pstack-codex
-./scripts/install.sh
+```sh
+codex plugin marketplace add thoriqakbar0/skills
+codex plugin add poteto-mode@thoriq-skills
 ```
 
-The installer backs up any same-named global skills before writing to `~/.codex/skills`. It does not touch unrelated skills.
+Start a new Codex task and invoke `$poteto-mode`. The plugin includes its
+Codex SessionStart hook and model-routing configuration. See the
+[port’s configuration reference](https://github.com/michael-denyer/pstack-claude/blob/97d2ba2790822939ee43db0d7856219ea96c450d/docs/reference.md)
+for setup and runtime details.
 
-Restart Codex or start a new task after installation so the refreshed skill catalog loads.
-
-## Configure
-
-Ask Codex:
-
-```text
-Use setup-pstack and configure pstack with your recommended Codex settings.
-```
-
-The setup skill writes `~/.codex/pstack/config.md`. When the active collaboration tool exposes model and reasoning-effort selection, the configuration routes verified Codex models by role; otherwise agents inherit the session runtime. It also controls fan-out, isolation, memory, verification, and publication policy.
-
-## Use
-
-Start rigorous work with:
-
-```text
-Use poteto-mode. Diagnose this bug, prove the root cause, fix it, and verify on the real surface.
-```
-
-You can also invoke focused skills such as `how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `blast-radius`, `tdd`, and `teach`.
-
-PR monitoring uses the bundled `poteto-mode` watcher. It requires Bun and an authenticated GitHub CLI:
-
-```bash
-bun --version
-gh auth status
-```
-
-The watcher installs its pinned dependencies on first use and reads GitHub state without granting merge authority. Babysit stops at merge-ready. Shipping requires an explicit request to merge, land, or enable merge when ready.
-
-## Check upstream
-
-```bash
-./scripts/check-upstream.sh
-```
-
-The script compares this port's recorded upstream commit with the current `cursor/plugins` main branch. It reports pstack changes without modifying the port.
-
-After porting an upstream update, replace `UPSTREAM_COMMIT` with the reviewed upstream commit and run:
-
-```bash
-./scripts/audit.py
-```
-
-## Attribution
-
-pstack was created by [Lauren Tan](https://github.com/poteto) and is published in the [Cursor plugins repository](https://github.com/cursor/plugins/tree/main/pstack) under the MIT License. This repository is an independent Codex port and is not affiliated with Cursor or OpenAI.
+Run `./scripts/check-upstream.sh` to inspect changes in Cursor pstack since
+the pinned revision. See [LICENSE](./LICENSE), [NOTICE.md](./NOTICE.md), and
+[NOTICE-skills.md](./NOTICE-skills.md) for attribution.

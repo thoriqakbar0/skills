@@ -1,11 +1,9 @@
 ### Opening a PR
 
-Check this gate at the end of every change playbook. Open or update a PR only when the user requested publication, the active task explicitly includes it, or an established repository workflow already placed the work on a PR branch. Otherwise stop after local verification and report that the changes are ready. A request to build or fix does not by itself authorize a PR, push, or external review action.
+Invoked at the end of every other playbook.
 
-**Worktree.** Preserve the user's current work. Use a fresh branch or worktree when parallel writers or unrelated dirty changes make isolation necessary. Give every writing agent a separate worktree. Never use a destructive reset to clean up user work.
+Work from a git worktree off trunk, and keep unrelated work out of it. Rebase into small, landable commits. Run `/deslop` over the diff before commit. Before you commit, merge, or deploy from a worktree, list the live agents and stop every one that holds it, including grandchildren you never launched. Confirm each stop, then run `git status` and read the tree you are about to ship.
 
-**Commits.** Commit liberally; rebase into small, ordered commits before opening PRs. Each commit is a future PR: landable, ordered to tell the story. Amend when the fix belongs in a just-made commit; new commit when separable.
+Title: `type(scope): subject`, naming a real symbol when one carries the change. Body: a one-minute briefing under 40 lines with these `##` headings in order, dropping empty ones: `## Why`, `## What changed`, `## Scope`, `## Tradeoffs` (only rejected alternatives a reviewer would otherwise ask about), `## Blast Radius`, `## Verification`.
 
-**PRs.** Inspect the diff for generated clutter, dead code, and unrelated edits before committing. Run the **no-comments** skill before review. Apply the **unslop** skill to the PR description and commit bodies. Prefer small ordered PRs. Use the team's stacking tool when present and keep dependencies visible. Run `gh pr view <number>` before referencing PR status. Rebase only when it is safe for the current branch. After opening, monitor checks and review feedback with the GitHub skills or `gh`; push back when feedback drifts from intent.
-
-A child agent that opens a PR runs `interrogate` and **no-comments**, inspects the diff for clutter, and returns the URL. The parent owns check and review follow-through.
+Stack follow-ups by base branch. Open PRs ready, through the run's PR tool with `draft: false`. Without one, use `gh pr create` without `--draft`, or `origin pr create --status open` when Origin's CLI resolves the repository. Opening a PR does not start a babysit.

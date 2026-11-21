@@ -1,4 +1,11 @@
-import { WatcherQueryError, resolveChecks } from "./github.ts";
+import { resolveHeadChecks } from "./head-checks.ts";
+import { landingRevision } from "./landing.ts";
+import {
+  ChecksUnavailable,
+  WatcherQueryError,
+  resolveReviewThreads,
+} from "./github.ts";
+import { DeadlineExceeded, type WatchDeadline } from "./deadline.ts";
 import type * as T from "./types.ts";
 import { nonEmpty } from "./types.ts";
 export function assessGitHubMerge(args: {
@@ -31,12 +38,16 @@ async function mergeAssessment(
   facts: T.PullRequestFacts
 ) {
   const commits = await reader.commitRollups(facts.context);
-  const headRollupState =
-    facts.headRefOid === null
-      ? null
-      : (commits.find((commit) => commit.oid === facts.headRefOid)?.state ??
-        null);
+  const head = commits.find((commit) => commit.oid === facts.headRefOid);
+  if (head === undefined)
+    throw new WatcherQueryError({
+      kind: "snapshot-changed",
+      retryable: true,
+      detail: `commit response does not contain expected head ${facts.headRefOid}`,
+    });
+  const headRollupState = head.state;
   return {
+    anyCommitReported: commits.some((commit) => commit.state !== null),
     hadPreviousPassingCi: commits.some(
       (commit) => commit.oid !== facts.headRefOid && commit.state === "SUCCESS"
     ),
@@ -46,25 +57,110 @@ async function mergeAssessment(
     }),
   };
 }
+type OpenFacts = Extract<T.PullRequestFacts, { readonly state: "OPEN" }>;
+export type NoChecksConfirmer = (
+  head: Pick<OpenFacts, "context" | "headRefOid">
+) => boolean;
+// GitHub registers a fresh head's checks seconds after the push, during which
+// every read matches a repository with no CI. Across 67 pushes measured in six
+// repositories the first check appeared within 9 seconds.
+export const NO_CHECKS_CONFIRM_SECONDS = 60;
+export function noChecksConfirmer(
+  clock: Pick<WatchClock, "now">
+): NoChecksConfirmer {
+  const firstSeen = new Map<
+    T.PrNumber,
+    { readonly headRefOid: string; readonly at: number }
+  >();
+  return (head) => {
+    const now = clock.now();
+    const prior = firstSeen.get(head.context.number);
+    if (prior?.headRefOid === head.headRefOid)
+      return now - prior.at >= NO_CHECKS_CONFIRM_SECONDS;
+    firstSeen.set(head.context.number, {
+      headRefOid: head.headRefOid,
+      at: now,
+    });
+    return false;
+  };
+}
+const neverConfirms: NoChecksConfirmer = () => false;
+async function noChecksCi(
+  reader: T.GitHubReader,
+  facts: OpenFacts,
+  queuedWithoutRuns: readonly T.SuiteApp[],
+  confirmNoChecks = neverConfirms
+): Promise<T.CiNone | T.CiUnreported> {
+  const merge = await mergeAssessment(reader, facts);
+  if (merge.anyCommitReported || merge.github.kind === "refused")
+    throw new ChecksUnavailable(
+      `no checks reported on head ${facts.headRefOid}, but a commit on this PR has reported checks`
+    );
+  const none = {
+    failed: [],
+    pending: [],
+    hadPreviousPassingCi: false,
+  } as const;
+  return confirmNoChecks(facts)
+    ? { ...none, kind: "ci-none", github: merge.github, queuedWithoutRuns }
+    : { ...none, kind: "ci-unreported" };
+}
 const AUTOMATION_TOKENS = [
   "bugbot",
   "security review",
   "pr review automation",
   "review automation",
 ] as const;
+const VERDICT_FACTS: Record<
+  Exclude<keyof T.PullRequestFacts, "context">,
+  true
+> = {
+  state: true,
+  mergedAt: true,
+  isDraft: true,
+  mergeable: true,
+  mergeStateStatus: true,
+  reviewDecision: true,
+  headRefOid: true,
+  headRefName: true,
+  baseRefName: true,
+  baseRefOid: true,
+};
+const mergeabilityUnknown = (facts: T.PullRequestFacts): boolean =>
+  facts.mergeable === "UNKNOWN" || facts.mergeStateStatus === "UNKNOWN";
+// GitHub computes these two on the first read that asks, so an unknown first
+// read usually has its answer by the re-read. That is not the PR changing.
+const COMPUTED_ON_DEMAND: ReadonlySet<string> = new Set([
+  "mergeable",
+  "mergeStateStatus",
+]);
+const changedFacts = (
+  before: T.PullRequestFacts,
+  after: T.PullRequestFacts
+): string[] =>
+  (Object.keys(VERDICT_FACTS) as (keyof typeof VERDICT_FACTS)[])
+    .filter((fact) => before[fact] !== after[fact])
+    .filter(
+      (fact) => !(mergeabilityUnknown(before) && COMPUTED_ON_DEMAND.has(fact))
+    )
+    .map((fact) => `${fact} ${before[fact]} -> ${after[fact]}`);
 export async function readSnapshot(args: {
   readonly reader: T.GitHubReader;
   readonly context: T.PrContext;
   readonly pendingHistory: "include" | "omit";
   readonly allowDraft: boolean;
+  readonly confirmNoChecks?: NoChecksConfirmer;
+  readonly expectedApps?: readonly string[];
 }): Promise<T.PrSnapshot> {
   const facts = await args.reader.pullRequest(args.context);
   if (facts.state === "MERGED" || facts.mergedAt !== null)
     return { kind: "merged", context: args.context, facts };
   if (facts.state === "CLOSED")
     return { kind: "closed", context: args.context, facts };
-  const threads = await args.reader.reviewThreads(args.context);
-  const checks = await resolveChecks(args.reader, args.context);
+  const [threads, checks] = await Promise.all([
+    resolveReviewThreads(args.reader, args.context),
+    resolveHeadChecks(args.reader, facts, args.expectedApps),
+  ]);
   const failed = nonEmpty(
     checks.checks.filter(
       (check): check is T.FailedCheck => check.kind === "failed"
@@ -76,7 +172,18 @@ export async function readSnapshot(args: {
     )
   );
   let ci: T.CiState;
-  if (failed === null && pending !== null && args.pendingHistory === "omit")
+  if (checks.kind === "no-checks")
+    ci = await noChecksCi(
+      args.reader,
+      facts,
+      checks.queuedWithoutRuns,
+      args.confirmNoChecks
+    );
+  else if (
+    failed === null &&
+    pending !== null &&
+    args.pendingHistory === "omit"
+  )
     ci = {
       kind: "ci-pending",
       source: checks.source,
@@ -117,8 +224,17 @@ export async function readSnapshot(args: {
         failed: [],
         pending: [],
         github: merge.github,
+        queuedWithoutRuns: checks.queuedWithoutRuns,
       };
   }
+  const factsAfterChecks = await args.reader.pullRequest(args.context);
+  const changed = changedFacts(facts, factsAfterChecks);
+  if (changed.length > 0)
+    throw new WatcherQueryError({
+      kind: "snapshot-changed",
+      retryable: true,
+      detail: `PR changed while collecting ${facts.headRefOid} against ${facts.baseRefName}: ${changed.join(", ")}`,
+    });
   return {
     kind: "open",
     context: args.context,
@@ -160,22 +276,44 @@ function gateReason(
   if (row.kind === "merged") return null;
   if (row.kind === "closed") return "closed-without-merge";
   if (row.facts.isDraft && !allowDraft) return "draft-pr";
-  return row.facts.reviewDecision === "CHANGES_REQUESTED"
-    ? "changes-requested"
+  if (row.facts.reviewDecision === "CHANGES_REQUESTED")
+    return "changes-requested";
+  // BEHIND means the base requires an up-to-date head. Updating the branch
+  // restarts its checks and can dismiss an approval, so this comes before a
+  // required review and does not wait for the current checks.
+  if (row.facts.mergeStateStatus === "BEHIND") return "behind-base";
+  if (row.facts.reviewDecision === "REVIEW_REQUIRED") return "review-required";
+  // BLOCKED with clean CI is some other branch protection rule, such as signed
+  // commits or a required check that never reported. GitHub will not merge it.
+  return row.facts.mergeStateStatus === "BLOCKED" ? "merge-blocked" : null;
+}
+function waitReason(row: T.PrSnapshot): T.WaitReason | null {
+  if (row.kind !== "open") return null;
+  if (row.ci.kind === "ci-pending")
+    return { kind: "pending-checks", pending: row.ci.pending };
+  if (row.ci.kind === "ci-unreported") return { kind: "checks-unreported" };
+  return mergeabilityUnknown(row.facts)
+    ? { kind: "mergeability-unknown" }
     : null;
 }
+const DEFERRED_WHILE_WAITING: ReadonlySet<T.MergeGateReason> = new Set([
+  "draft-pr",
+  "review-required",
+  "merge-blocked",
+]);
 function gateBlocker(
   row: T.PrSnapshot,
   allowDraft: boolean
 ): T.MergeBlocker | null {
   const reason = gateReason(row, allowDraft);
   return reason === null ||
-    (reason === "draft-pr" &&
-      row.kind === "open" &&
-      row.ci.kind === "ci-pending")
+    (DEFERRED_WHILE_WAITING.has(reason) && waitReason(row) !== null)
     ? null
     : { kind: "merge-gate", pr: row.context, reason };
 }
+// Indexed by the fact itself, so a proof compiles only where the guard below
+// has narrowed mergeable to MERGEABLE.
+const CLEAR_ONLY_WHEN = { MERGEABLE: "clear" } as const;
 function readyContribution(
   row: T.PrSnapshot,
   allowDraft: boolean
@@ -188,19 +326,25 @@ function readyContribution(
     };
   if (
     row.kind !== "open" ||
-    row.ci.kind !== "ci-clean" ||
+    (row.ci.kind !== "ci-clean" && row.ci.kind !== "ci-none") ||
     row.threads.length !== 0 ||
+    row.facts.mergeable !== "MERGEABLE" ||
     conflictBlocker(row) !== null ||
     gateReason(row, allowDraft) !== null
   )
     return null;
   const reviewDecision = row.facts.reviewDecision;
-  if (reviewDecision === "CHANGES_REQUESTED") return null;
+  if (
+    reviewDecision === "CHANGES_REQUESTED" ||
+    reviewDecision === "REVIEW_REQUIRED"
+  )
+    return null;
   return {
     kind: "ready-pr",
     context: row.context,
     proof: {
-      mergeability: "clear",
+      revision: landingRevision(row.facts),
+      mergeability: CLEAR_ONLY_WHEN[row.facts.mergeable],
       threads: [],
       ci: row.ci,
       gate: {
@@ -222,8 +366,9 @@ export function classifyPr(
     gateBlocker(row, allowDraft),
   ])
     if (blocker !== null) return { kind: "blocker", blocker };
-  if (row.kind === "open" && row.ci.kind === "ci-pending")
-    return { kind: "waiting", frontier: row.context, pending: row.ci.pending };
+  const wait = waitReason(row);
+  if (wait !== null)
+    return { kind: "waiting", frontier: row.context, reason: wait };
   const ready = readyContribution(row, allowDraft);
   if (ready === null) throw new Error("snapshot has no classified decision");
   return ready.kind === "merged-pr"
@@ -243,13 +388,11 @@ export function selectTierMajorStackDecision(
     const blocker = gateBlocker(row, allowDraft);
     if (blocker !== null) return { kind: "blocker", blocker };
   }
-  for (const row of rows)
-    if (row.kind === "open" && row.ci.kind === "ci-pending")
-      return {
-        kind: "waiting",
-        frontier: row.context,
-        pending: row.ci.pending,
-      };
+  for (const row of rows) {
+    const wait = waitReason(row);
+    if (wait !== null)
+      return { kind: "waiting", frontier: row.context, reason: wait };
+  }
   const prs = nonEmpty(
     rows
       .map((row) => readyContribution(row, allowDraft))
@@ -341,21 +484,32 @@ export interface WatchClock {
   sleep(seconds: number): Promise<void>;
 }
 export interface RunDependencies {
+  readonly deadline: WatchDeadline;
   readonly reader: T.GitHubReader;
   readonly clock: WatchClock;
   readonly emit: (verdict: T.ProgressVerdict) => void;
 }
-const deadlinePassed = (
-  started: number,
-  options: T.PollingOptions,
-  now: number
-): boolean => options.timeout > 0 && now - started >= options.timeout;
+export function deadlineVerdict(stamp: VerdictStamp): T.TimeoutVerdict {
+  return stamp({
+    kind: "TIMEOUT",
+    terminal: true,
+    exitCode: 5,
+    reason: {
+      kind: "status-unavailable",
+      failure: {
+        kind: "deadline",
+        retryable: false,
+        detail: "deadline reached before a complete observation",
+      },
+    },
+  });
+}
 type StepResult<V> =
   | { readonly kind: "terminal"; readonly verdict: V }
   | {
       readonly kind: "sleep";
       readonly seconds: number;
-      readonly onDeadline?: () => V;
+      readonly onDeadline: () => V;
     }
   | { readonly kind: "continue" };
 async function pollUntilTerminal<V>(args: {
@@ -365,20 +519,30 @@ async function pollUntilTerminal<V>(args: {
   readonly step: () => Promise<StepResult<V>>;
 }): Promise<V | T.BlockerVerdict | T.TimeoutVerdict> {
   let failures = 0;
-  const started = args.dependencies.clock.now();
-  while (true) {
+  const { deadline } = args.dependencies;
+  let onDeadline: () => V | T.TimeoutVerdict = () =>
+    deadlineVerdict(args.stamp);
+  while (deadline.remaining() > 0) {
     let result: StepResult<V>;
     try {
       result = await args.step();
       failures = 0;
     } catch (error) {
+      if (error instanceof DeadlineExceeded) break;
       if (!(error instanceof WatcherQueryError)) throw error;
+      onDeadline = () =>
+        args.stamp({
+          kind: "TIMEOUT",
+          terminal: true,
+          exitCode: 5,
+          reason: { kind: "status-unavailable", failure: error.failure },
+        });
       failures += 1;
       if (!error.failure.retryable || failures >= args.options.maxQueryErrors)
         return statusQueryVerdict(args.stamp, failures, error.failure);
-      const retryInSeconds = queryBackoffSeconds(
-        args.options.interval,
-        failures
+      const retryInSeconds = Math.min(
+        deadline.remaining(),
+        queryBackoffSeconds(args.options.interval, failures)
       );
       args.dependencies.emit(
         args.stamp({
@@ -389,26 +553,18 @@ async function pollUntilTerminal<V>(args: {
           retryInSeconds,
         })
       );
-      if (deadlinePassed(started, args.options, args.dependencies.clock.now()))
-        return args.stamp({
-          kind: "TIMEOUT",
-          terminal: true,
-          exitCode: 5,
-          reason: { kind: "status-unavailable", failure: error.failure },
-        });
       await args.dependencies.clock.sleep(retryInSeconds);
       continue;
     }
     if (result.kind === "terminal") return result.verdict;
     if (result.kind === "sleep") {
-      if (
-        result.onDeadline !== undefined &&
-        deadlinePassed(started, args.options, args.dependencies.clock.now())
-      )
-        return result.onDeadline();
-      await args.dependencies.clock.sleep(result.seconds);
+      onDeadline = result.onDeadline;
+      await args.dependencies.clock.sleep(
+        Math.min(result.seconds, deadline.remaining())
+      );
     }
   }
+  return onDeadline();
 }
 export async function runSimple(args: {
   readonly dependencies: RunDependencies;
@@ -418,6 +574,7 @@ export async function runSimple(args: {
   readonly options: T.PollingOptions;
 }): Promise<T.TerminalVerdict> {
   const stamp = verdictFactory(args.dependencies.clock, args.mode);
+  const confirmNoChecks = noChecksConfirmer(args.dependencies.clock);
   const step = async (): Promise<StepResult<T.TerminalVerdict>> => {
     const rows: T.PrSnapshot[] = [];
     for (const context of args.contexts)
@@ -427,6 +584,8 @@ export async function runSimple(args: {
           context,
           pendingHistory: "include",
           allowDraft: args.options.allowDraft,
+          confirmNoChecks,
+          expectedApps: args.options.expectedApps,
         })
       );
     const complete = nonEmpty(rows);
@@ -491,7 +650,7 @@ export async function runSimple(args: {
         kind: "WAITING",
         terminal: false,
         frontier: decision.frontier,
-        reason: { kind: "pending-checks", pending: decision.pending },
+        reason: decision.reason,
       })
     );
     return {
@@ -502,7 +661,7 @@ export async function runSimple(args: {
           kind: "TIMEOUT",
           terminal: true,
           exitCode: 5,
-          reason: { kind: "pending-checks", pending: decision.pending },
+          reason: decision.reason,
         }),
     };
   };
@@ -526,7 +685,6 @@ export interface QueueState {
   readonly nextSweepAt: number;
   readonly frontier: T.PrContext | null;
   readonly lastWaitKey: string | null;
-  readonly startedAt: number;
 }
 export const createQueueState = (
   queue: T.NonEmpty<T.PrContext>,
@@ -538,7 +696,6 @@ export const createQueueState = (
   nextSweepAt: now,
   frontier: null,
   lastWaitKey: null,
-  startedAt: now,
 });
 const orderedRows = (state: QueueState): T.PrSnapshot[] =>
   state.queue.flatMap((context) => {
@@ -620,26 +777,16 @@ export type QueueEvaluation =
       readonly remaining: number;
     }
   | {
-      readonly kind: "timeout";
-      readonly state: QueueState;
-      readonly frontier: T.PrContext;
-      readonly unmergedCount: number;
-    }
-  | {
       readonly kind: "waiting";
       readonly state: QueueState;
       readonly frontier: T.PrContext;
       readonly reason:
-        | {
-            readonly kind: "pending-checks";
-            readonly pending: T.NonEmpty<T.PendingCheck>;
-          }
+        | T.WaitReason
         | { readonly kind: "merge-queue"; readonly unmergedCount: number };
       readonly emit: boolean;
     };
 export function evaluateQueue(
   state: QueueState,
-  now: number,
   options: T.PollingOptions
 ): QueueEvaluation {
   const active = activeRows(state);
@@ -674,30 +821,22 @@ export function evaluateQueue(
       frontier,
       remaining: active.length,
     };
-  if (deadlinePassed(state.startedAt, options, now))
-    return {
-      kind: "timeout",
-      state: { ...state, frontier },
-      frontier,
-      unmergedCount: active.length,
-    };
-  const row = rows[0];
-  const pending =
-    row.kind === "open" && row.ci.kind === "ci-pending" ? row.ci.pending : null;
-  const reason =
-    pending === null
-      ? ({ kind: "merge-queue", unmergedCount: active.length } as const)
-      : ({ kind: "pending-checks", pending } as const);
-  const key =
+  const reason = waitReason(rows[0]) ?? {
+    kind: "merge-queue" as const,
+    unmergedCount: active.length,
+  };
+  const waitKey =
     reason.kind === "pending-checks"
       ? `pending:${frontier.number}:${reason.pending.length}`
-      : `queue:${frontier.number}:${reason.unmergedCount}`;
+      : reason.kind === "merge-queue"
+        ? `queue:${frontier.number}:${reason.unmergedCount}`
+        : `${reason.kind}:${frontier.number}`;
   return {
     kind: "waiting",
-    state: { ...state, frontier, lastWaitKey: key },
+    state: { ...state, frontier, lastWaitKey: waitKey },
     frontier,
     reason,
-    emit: state.lastWaitKey !== key,
+    emit: state.lastWaitKey !== waitKey,
   };
 }
 export async function runQueued(args: {
@@ -707,17 +846,14 @@ export async function runQueued(args: {
 }): Promise<T.QueueTerminalVerdict> {
   let state = createQueueState(args.contexts, args.dependencies.clock.now());
   const stamp = verdictFactory(args.dependencies.clock, "queued-stack");
+  const confirmNoChecks = noChecksConfirmer(args.dependencies.clock);
   args.dependencies.emit(
     stamp({ kind: "QUEUE", terminal: false, queue: args.contexts })
   );
   const step = async (): Promise<StepResult<T.QueueTerminalVerdict>> => {
     state = planQueue(state, args.dependencies.clock.now());
     if (state.work === null) {
-      const complete = evaluateQueue(
-        state,
-        args.dependencies.clock.now(),
-        args.options
-      );
+      const complete = evaluateQueue(state, args.options);
       if (complete.kind !== "complete")
         throw new Error("queue has no work while active");
       return {
@@ -740,6 +876,8 @@ export async function runQueued(args: {
       context,
       pendingHistory: "omit",
       allowDraft: args.options.allowDraft,
+      confirmNoChecks,
+      expectedApps: args.options.expectedApps,
     });
     const applied = applyQueueSnapshot(
       state,
@@ -758,11 +896,7 @@ export async function runQueued(args: {
         })
       );
     if (state.work !== null) return { kind: "continue" };
-    const evaluation = evaluateQueue(
-      state,
-      args.dependencies.clock.now(),
-      args.options
-    );
+    const evaluation = evaluateQueue(state, args.options);
     state = evaluation.state;
     switch (evaluation.kind) {
       case "complete":
@@ -792,20 +926,6 @@ export async function runQueued(args: {
           })
         );
         return { kind: "continue" };
-      case "timeout":
-        return {
-          kind: "terminal",
-          verdict: stamp({
-            kind: "TIMEOUT",
-            terminal: true,
-            exitCode: 5,
-            reason: {
-              kind: "queued-stack",
-              frontier: evaluation.frontier,
-              unmergedCount: evaluation.unmergedCount,
-            },
-          }),
-        };
       case "waiting":
         if (evaluation.emit)
           args.dependencies.emit(
@@ -816,7 +936,21 @@ export async function runQueued(args: {
               reason: evaluation.reason,
             })
           );
-        return { kind: "sleep", seconds: args.options.interval };
+        return {
+          kind: "sleep",
+          seconds: args.options.interval,
+          onDeadline: () =>
+            stamp({
+              kind: "TIMEOUT",
+              terminal: true,
+              exitCode: 5,
+              reason: {
+                kind: "queued-stack",
+                frontier: evaluation.frontier,
+                unmergedCount: activeRows(state).length,
+              },
+            }),
+        };
       default: {
         const exhaustive: never = evaluation;
         return exhaustive;
