@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Expanded `/hook` to compare openings, repair slow passages, and make the ending deliver on the lead. Thanks @thoriqakbar0.
+
 - Added the standalone `/hook` skill to sharpen prose for sustained reader attention. Thanks @thoriqakbar0.
 
 - Added the `copywrite` skill for drafting, auditing, and testing conversion copy with MECLABS principles. Thanks @thoriqakbar0.
