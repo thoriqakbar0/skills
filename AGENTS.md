@@ -78,7 +78,6 @@ For every non-trivial ask, your first visible message must be a 2–4 line sharp
 
 ### People, CI, and tools
 
-- Eldi / Eldianto, team-ai / team AI, and Ira requests always route to ClickUp as source and destination. Do not infer Slack from these names.
 - `fix ci` is consent to pull, commit, and push. Fetch failed logs once, rerun the failed checks locally, fix, push once, and repeat until green. `gh run rerun --failed` only for a diagnosed infra or flaky failure, never to chase green.
 - GitHub CLI: bare PATH `gh` only (Octopool). Fan-out reads over many runs, checks, or IDs: max 4 in flight. Fetch CI logs once per failed run and reuse. Request narrow `--json <fields>`.
 - Prefer fixing or rewriting a PR, then merging; don't close it and duplicate the work as a direct commit. Explicit land of your own draft: mark ready if needed and continue. After landing, check out the actual merge target, `git pull --ff-only`, and `git status -sb`. Then give a real 2–5 paragraph recap (problem, root cause, what changed and why, proof, follow-ups)—not a checklist of SHAs.
