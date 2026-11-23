@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added the standalone `comms` skill for agent replies and ready-to-send drafts. Thanks @thoriqakbar0.
+
 - Expanded `/hook` to compare openings, repair slow passages, and make the ending deliver on the lead. Thanks @thoriqakbar0.
 
 - Added the standalone `/hook` skill to sharpen prose for sustained reader attention. Thanks @thoriqakbar0.

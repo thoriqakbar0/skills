@@ -41,6 +41,7 @@ $coding-standards review this TypeScript change and fix the verified defects
 | --- | --- |
 | [`behavior`](#behavior) | feature-by-feature specifications grounded in code, tests, and the running product |
 | [`coding-standards`](#coding-standards) | TypeScript design, implementation, review, and tests |
+| [`comms`](./comms/) | write agent updates and draft messages suited to the reader |
 | [`copywrite`](./copywrite/) | MECLABS-based conversion copy, audits, and test hypotheses |
 | [`hook`](./hook/) | rework prose around its strongest opening, sustain attention, and deliver the payoff |
 | [`open-sourcing`](#open-sourcing) | public-release preparation, licensing, secrets hygiene, CI, and packaging |
