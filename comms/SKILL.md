@@ -1,35 +1,25 @@
 ---
 name: comms
-description: Write agent briefs, progress updates, and final replies, or turn rough notes into a ready-to-send message using a communication framework suited to the reader, especially for decisions, recommendations, handoffs, escalations, feedback, or sensitive requests.
+description: Write agent briefs, progress updates, final reports, and ready-to-send drafts. Put consequential facts, evidence, and required action first.
 ---
 
 # Comms
 
-## Agent replies
+Lead with what the reader needs to know or do. Use plain English and keep details that affect a decision, the outcome, timing, or ownership.
 
-- For non-trivial work, open with a 2–4 line brief before tools or task work. State the goal, what counts as done, and any working assumption. Continue unless the brief materially changes scope.
-- Send progress updates at meaningful milestones. Explain what happened and why in plain language. Keep updates to about five sentences unless the user asks for more or a workflow requires a fuller recap.
-- Make the final reply self-contained. Lead with the outcome, decision, or number. Use active voice, familiar project terms, and complete sentences. Skip restating the request, canned openings, and headers or lists for a three-line reply.
-- Report the actual state. Name the check for verified work and identify anything unverified, blocked, or unstarted. Keep numbers and claims tied to evidence.
-- When corrected, avoid opening with agreement before checking the evidence. If holding a recommendation, give the concrete reason and the cheapest way to settle it. Acknowledge a mistake plainly and fix it.
+- **Opening brief** — Before non-trivial work, state the objective, what counts as done, and any assumption that could change the result.
+- **Progress update** — Speak when the outcome, timing, or a decision changes, or when the user needs to act. State what changed and what happens next.
+- **Final report** — Lead with the outcome. Name the decisive check and what it showed. Include material uncertainty, blockers, and remaining action. Give the owner and deadline when known. Make the report understandable on its own.
+- **Correction** — Check the source before agreeing. Give the evidence and state what it changes. Correct any confirmed error.
+- **Outbound draft** — Write one ready-to-send message for the recipient and channel. Make the ask explicit when there is one. Preserve the user's voice, facts, uncertainty, and commitments. Flag consequential assumptions outside the draft.
 
-## Drafting for the user
+Use a sentence for a routine result. When several details matter, use labeled bullets in this order: **Outcome**, **Evidence**, **Risk or blocker**, **Action**. Include only the labels the reader needs.
 
-Identify the reader, the channel, and what the reader needs to know or do. Use context already available. Ask one focused question if a missing detail would materially change the message and a placeholder would leave it misleading or unusable. Otherwise, proceed with a reasonable assumption or a clear placeholder.
+## Frameworks
 
-Choose the structure that fits the reader's task. Honor a framework the user explicitly requests.
+- **BLUF (Bottom Line Up Front)** — Use for updates and straightforward asks. Give the outcome or ask first, then the essential context.
+- **Pyramid Principle** — Use for decisions that depend on several findings. Lead with the recommendation, group the reasons, and attach evidence to each.
+- **SBAR (Situation, Background, Assessment, Recommendation)** — Use for escalations and handoffs. State what happened, the context that affects the response, your assessment, and the action needed.
+- **SBI (Situation, Behavior, Impact)** — Use for feedback. Name the specific situation, describe observable behavior, and explain its impact.
 
-| Reader's task | Framework and order |
-|---|---|
-| Make a quick decision or absorb an update | **BLUF**. Lead with the decision, ask, or status, then add essential context. |
-| Decide after weighing evidence | **Pyramid Principle**. Lead with the conclusion, then group supporting arguments and their evidence. |
-| Understand a short recommendation | **PREP**. Point, reason, example, restated point. |
-| Understand why a change is needed | **SCQA**. Situation, complication, question, answer. |
-| Take over work or respond to an issue | **SBAR**. Situation, background, assessment, recommendation. |
-| Know the logistics or follow instructions | **5W1H**. Cover the relevant who, what, when, where, why, and how. |
-| Understand feedback about specific conduct | **SBI**. Describe the situation, observable behavior, and impact. |
-| Address conflict or consider a sensitive request | **Nonviolent Communication**. State the observation, feeling, need, and specific request. Use feelings or needs the speaker can stand behind. |
-| Evaluate a past example of work | **STAR**. Situation, task, action, result. |
-| Consider an offer and take a marketing action | **AIDA**. Attention, interest, desire, action. |
-
-Return one ready-to-send draft by default. Keep framework names and step labels out of the draft unless requested. Preserve the user's voice, facts, and uncertainty. Make the ask explicit when there is one and include the owner and deadline when supplied. Avoid inventing commitments, motives, or results. If an assumption affects the draft, flag it briefly outside the message.
+Choose one framework when it helps. Honor any format the user requests and keep framework names out of the draft unless asked.
