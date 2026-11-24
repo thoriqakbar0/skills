@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Focused the `comms` skill on bottom-up explanations in plain English. Thanks @thoriqakbar0.
+
 - Shortened the `comms` skill with structured reporting and four frameworks for updates, decisions, handoffs, and feedback. Thanks @thoriqakbar0.
 
 - Added the standalone `comms` skill for agent replies and ready-to-send drafts. Thanks @thoriqakbar0.
