@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Restored four communication frameworks in the `comms` skill. Thanks @thoriqakbar0.
+
 - Focused the `comms` skill on bottom-up explanations in plain English. Thanks @thoriqakbar0.
 
 - Shortened the `comms` skill with structured reporting and four frameworks for updates, decisions, handoffs, and feedback. Thanks @thoriqakbar0.
