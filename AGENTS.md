@@ -1,6 +1,6 @@
 # Agent instructions
 
-Hard rules for all work on this machine. Skills own tool workflows; this file does not repeat them. For coding work, read `/root/.agents/skills/poteto-mode/SKILL.md` and go to the applicable playbook. For visual work (UI, layout, typography, animation, polish), also follow `frontend-design` at `/root/.agents/skills/frontend-design/SKILL.md` (`impeccable` implies it).
+Hard rules for all work on this machine. Skills own tool workflows; this file does not repeat them. For coding work, read `/root/.agents/skills/poteto-mode/SKILL.md` and go to the applicable playbook. Use `frontend-design` at `~/.agents/skills/frontend-design/SKILL.md` when it helps the visual task or when the user explicitly requests it, including by saying `impeccable`.
 
 ## Auto-sharpen
 
