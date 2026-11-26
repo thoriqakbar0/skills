@@ -40,6 +40,7 @@ $coding-standards review this TypeScript change and fix the verified defects
 | skill | use it for |
 | --- | --- |
 | [`behavior`](#behavior) | feature-by-feature specifications grounded in code, tests, and the running product |
+| [`cheap-ui-audit`](./cheap-ui-audit/) | prioritized CSS and Tailwind fixes for visual polish and edge-case states |
 | [`coding-standards`](#coding-standards) | TypeScript design, implementation, review, and tests |
 | [`comms`](./comms/) | write agent updates and draft messages suited to the reader |
 | [`copywrite`](./copywrite/) | MECLABS-based conversion copy, audits, and test hypotheses |

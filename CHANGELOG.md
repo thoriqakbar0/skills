@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added the `cheap-ui-audit` skill for finding visual polish issues and proposing concrete fixes. Thanks @indrazm.
+
 - Restored four communication frameworks in the `comms` skill. Thanks @thoriqakbar0.
 
 - Focused the `comms` skill on bottom-up explanations in plain English. Thanks @thoriqakbar0.
