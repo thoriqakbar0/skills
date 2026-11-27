@@ -1,0 +1,1 @@
+The Effect TS skill comes from [Effect's official skills repository](https://github.com/effect-ts/skills/tree/155c50c911f9c99c294ef8a4461981c5bbe6453e/skills/effect-ts) and is distributed under the [MIT license](LICENSE).

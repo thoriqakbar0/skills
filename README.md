@@ -44,6 +44,7 @@ $coding-standards review this TypeScript change and fix the verified defects
 | [`coding-standards`](#coding-standards) | TypeScript design, implementation, review, and tests |
 | [`comms`](./comms/) | write agent updates and draft messages suited to the reader |
 | [`copywrite`](./copywrite/) | MECLABS-based conversion copy, audits, and test hypotheses |
+| [`effect-ts`](./effect-ts/) | set up a repository to use Effect TypeScript |
 | [`hook`](./hook/) | rework prose around its strongest opening, sustain attention, and deliver the payoff |
 | [`open-sourcing`](#open-sourcing) | public-release preparation, licensing, secrets hygiene, CI, and packaging |
 | [`orchestrate`](#orchestrate) | substantial tasks with independent work for multiple agents |
