@@ -2,7 +2,7 @@
 
 [![skills.sh](https://skills.sh/b/thoriqakbar0/skills)](https://skills.sh/thoriqakbar0/skills)
 
-ten reusable skills, one Codex plugin, and 14 ready-to-run prompts.
+ten reusable skills and one Codex plugin.
 
 use a skill for repeatable behavior across tasks. use a prompt for one focused workflow.
 
@@ -236,55 +236,6 @@ it guides Codex to:
 
 invoke it with `$write-discoverable-code`.
 
-## reusable prompts
-
-the [`prompts` collection](./prompts/) provides ready-to-run workflows for GitHub work, tests, planning, refactoring, and long tasks.
-
-use a prompt when you need a repeatable command without installing a complete skill.
-
-### GitHub and delivery prompts
-
-| prompt | use it to | what it does |
-| --- | --- | --- |
-| [`gh-address-pr-comments`](./prompts/gh-address-pr-comments.md) | resolve selected PR review comments | applies focused changes and reports unresolved comments |
-| [`gh-commit`](./prompts/gh-commit.md) | divide local changes into focused commits | avoids unrelated files and never stages the complete worktree |
-| [`gh-fix-ci`](./prompts/gh-fix-ci.md) | find and fix the first causal CI error | runs the smallest local check that covers the failure |
-| [`gh-review-pr`](./prompts/gh-review-pr.md) | review a PR for correctness, tests, and material risk | separates required fixes, suggestions, and questions |
-| [`gh-ship`](./prompts/gh-ship.md) | commit selected files, push a branch, and create a PR | stops on `main` or `master` and avoids `git add .` |
-
-### Building and testing prompts
-
-| prompt | use it to | what it does |
-| --- | --- | --- |
-| [`codebase-audit`](./prompts/codebase-audit.md) | audit a complete codebase for useful simplifications | inventories every subsystem, validates findings, and leaves the repository unchanged |
-| [`de-slop`](./prompts/de-slop.md) | find AI artifacts and unrelated cleanup before a PR | shows findings first and changes only the selected items |
-| [`design-doc`](./prompts/design-doc.md) | turn an implementation idea into a reviewable design | produces goals, design, alternatives, open questions, and an implementation plan |
-| [`html-artifact`](./prompts/html-artifact.md) | build a self-contained interactive HTML artifact | saves one browser-tested file with accessible controls and clear information hierarchy |
-| [`make-tests`](./prompts/make-tests.md) | add behavior tests for the current change | covers success, boundary, failure, and regression paths |
-| [`work-forever`](./prompts/work-forever.md) | continue long work with few questions | states assumptions, monitors long commands, and keeps destructive actions blocked |
-
-### Authoring prompts
-
-| prompt | use it to | what it does |
-| --- | --- | --- |
-| [`new-cmd`](./prompts/new-cmd.md) | turn a conversation or request into a reusable command | matches the active agent runtime and reports the exact invocation |
-| [`new-skill`](./prompts/new-skill.md) | turn a conversation or request into a reusable skill | creates only the files and scripts that the workflow needs |
-
-copy all prompts into Codex:
-
-```sh
-mkdir -p "$HOME/.codex/prompts"
-rsync -a prompts/ "$HOME/.codex/prompts/"
-```
-
-this command replaces prompt files with matching names. review local changes before you copy customized prompts.
-
-invoke a copied prompt by name:
-
-```text
-/prompts:gh-review-pr 123
-```
-
 ## manual installation
 
 use manual installation when you do not want the skills CLI.
@@ -324,7 +275,6 @@ treat this file as personal configuration. review and merge its rules with your 
 ├── open-sourcing/            public-release readiness skill and references
 ├── orchestrate/              multi-agent coordination skill
 ├── pbt/                      property-based testing skill
-├── prompts/                  reusable Codex prompts
 ├── self-improve/             session review skill and script
 ├── technical-documentation/  documentation skill and references
 ├── unslop/                   prose editing skill

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Removed the standalone prompt collection and its installation instructions. Thanks @thoriqakbar0.
+
 - Clarified when to use the `comms` skill for user messages and agent transcripts. Thanks @thoriqakbar0.
 
 - Added the upstream `effect-ts` skill for setting up Effect TypeScript repositories. Thanks @Effect-TS.
