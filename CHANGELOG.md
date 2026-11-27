@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Clarified when to use the `comms` skill for user messages and agent transcripts. Thanks @thoriqakbar0.
+
 - Added the upstream `effect-ts` skill for setting up Effect TypeScript repositories. Thanks @Effect-TS.
 
 - Added the `cheap-ui-audit` skill for finding visual polish issues and proposing concrete fixes. Thanks @indrazm.
