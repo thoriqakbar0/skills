@@ -51,6 +51,7 @@ $coding-standards review this TypeScript change and fix the verified defects
 | [`pbt`](#pbt) | property-based testing that targets and proves plausible defects |
 | [`self-improve`](#self-improve) | improvements supported by evidence from previous Codex sessions |
 | [`technical-documentation`](#technical-documentation) | documentation that people and agents can use without hidden context |
+| [`tigerstyle`](./tigerstyle/) | bounded, predictable code guided by TigerBeetle’s TigerStyle |
 | [`unslop`](#unslop) | remove AI writing patterns while preserving meaning and voice |
 | [`visual-pr`](#visual-pr) | concise pull request descriptions with visual outlines for reviewers |
 | [`write-discoverable-code`](#write-discoverable-code) | code names and messages that plain-text search can find |

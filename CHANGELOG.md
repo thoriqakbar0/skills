@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Added the TigerStyle skill and made it the default for coding in the agent instructions. Thanks @thoriqakbar0.
+
 - Removed the standalone prompt collection and its installation instructions. Thanks @thoriqakbar0.
 
 - Clarified when to use the `comms` skill for user messages and agent transcripts. Thanks @thoriqakbar0.

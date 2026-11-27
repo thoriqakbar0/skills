@@ -34,6 +34,7 @@ Prefer depth over breadth: make the task deeper, not bigger. Taste: simplest des
 
 ## Engineering bar
 
+- Apply TigerStyle by default when writing, refactoring, or reviewing code. Read [TigerStyle](tigerstyle/SKILL.md) first. Follow the repository’s conventions for language-specific rules.
 - Trace current behavior from the entry point before editing. Make the smallest coherent change. Reuse existing logic, classes, and APIs when they preserve correctness, and preserve the behavior callers rely on unless the task requires changing it. Match existing contracts and style. Keep code readable and easy to verify: no code-golf, dense one-liners, or unnecessary indirection or abstraction. Add or update tests next to the behavior.
 - A bug fix gets a regression test when one fits. When a check fails, capture the smallest useful evidence, make a targeted fix, and rerun. Don't weaken checks, add ignore flags, or skip tests to go green.
 - Verify through the normal entry point. Report what you observed and name anything you couldn't verify. "Done" requires that verification.
